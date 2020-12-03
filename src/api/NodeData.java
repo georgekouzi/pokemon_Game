@@ -79,6 +79,8 @@ public class NodeData implements node_data,Serializable {
 		Tag=t;		
 	}
 
-
+	public String toString() {
+		return "Node = "+ _key;
+	}
 
 }

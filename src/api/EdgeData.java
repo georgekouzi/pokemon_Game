@@ -61,4 +61,9 @@ public class EdgeData implements edge_data,Serializable {
 		_tag=t;
 	}
 
+	public String toString() {
+		return "hi";
+	}
+	
+	
 }

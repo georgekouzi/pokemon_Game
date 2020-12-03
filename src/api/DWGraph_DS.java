@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 
 
+
 public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 	private static final long serialVersionUID = 1L;
@@ -174,17 +175,17 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	public node_data removeNode(int key) {
 		if(_nodeData.containsKey(key)) {
 			//if node(key) have neighbors.
-			//			if(_edgeData.containsKey(_nodeData.get(key))) {
 			node_data removeNode=_nodeData.get(key);
-
-			for(node_data n: getV()) {
-				if(_edgeData.get(n).containsKey(_nodeData.get(key))) {		
-					_edgeData.get(n).remove(_nodeData.get(key));
-					sizeOfEdge--;
-					modeCount++;
+//			if(_edgeData.containsKey(_nodeData.get(key))) {
+//System.out.println("innn");
+				for(node_data n: getV()) {
+					if(_edgeData.containsKey(n)&&_edgeData.get(n).containsKey(_nodeData.get(key))) {		
+						_edgeData.get(n).remove(_nodeData.get(key));
+						sizeOfEdge--;
+						modeCount++;
+					}
 				}
-			}
-
+//			}
 			sizeOfEdge=sizeOfEdge-_edgeData.get(_nodeData.get(key)).size();
 			modeCount=modeCount+_edgeData.get(_nodeData.get(key)).size();
 			_edgeData.remove(_nodeData.get(key));
@@ -223,6 +224,27 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	@Override
 	public int getMC() {
 		return modeCount;
+	}
+
+	/**
+	 * string function return all the data of nodes and edge on the graph
+	 * @return s
+	 */
+	public String toString() {
+
+		String s="";
+		for(node_data i : getV()) {
+			s+="\n"+"Node= "+ i.getKey()+"\n";
+			if(!_edgeData.containsKey(i))
+				s+="The node has no connections"+"\n";
+			else {
+				for(edge_data j : getE(i.getKey())) {
+					s+="connect to node: "+j.getDest()+" , the edge is: < "+j.getSrc()+","+j.getDest()+" >"+"and the weight between them is: "+j.getWeight() +"\n";
+				}	
+			}
+		}
+		return s; 
+
 	}
 
 }
