@@ -58,7 +58,6 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		}
 		System.out.println(algo.shortestPathDist(0, 2));
 
-		//		System.out.println(g.edgeSize());
 		//		dw_graph_algorithms G= new DWGraph_AlgoGW();
 		//		       G.init(g);
 		//				G.save("hg.json");
