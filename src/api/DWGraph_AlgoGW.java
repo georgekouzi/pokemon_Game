@@ -34,34 +34,43 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 	public static void main(String[] args) {
 
-		directed_weighted_graph g=new DWGraph_DS(),g1;
+		directed_weighted_graph g=new DWGraph_DS();
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
-		//		g.connect(5, 6, 3.0);
-		g.connect(0, 1, 3.0);
-		g.connect(0, 1, 3.0);
+		g.addNode(new NodeData());
+		g.connect(0, 3, 8.22);
+		g.connect(1, 2, 4.0);
+		g.connect(1, 4, 6.34);
+		g.connect(2, 3, 7.877);
+		g.connect(3, 1, 6.565);
+		g.connect(4, 2, 1.2);
+		g.connect(4, 0, 7.5);
 
-		//
-		//		g.connect(6, 7, 3.0);
-		//		g.connect(8, 5, 3.0);
-		//		g.connect(8, 6, 3.0);
-		//		g.connect(8, 8, 3.0);
+		dw_graph_algorithms algo= new DWGraph_AlgoGW();
+		algo.init(g);
+		//		System.out.println(algo.shortestPath(1, 3));
+		//		algo.shortestPath(1, 3);
+
+		for(node_data n :algo.shortestPath(0, 2)) {
+			System.out.println(n.getKey());
+		}
+		System.out.println(algo.shortestPathDist(0, 2));
 
 		//		System.out.println(g.edgeSize());
-		dw_graph_algorithms G= new DWGraph_AlgoGW();
-		       G.init(g);
-				G.save("hg.json");
-				G.load("hg.json");
+		//		dw_graph_algorithms G= new DWGraph_AlgoGW();
+		//		       G.init(g);
+		//				G.save("hg.json");
+		//				G.load("hg.json");
 
-//		G.load("A0");
-//				g1=G.copy();
-//		//		g.removeNode(5);
-//				System.out.println(g1);
+		//		G.load("A0");
+		//				g1=G.copy();
+		//		//		g.removeNode(5);
+		//				System.out.println(g1);
 		//		System.out.println(g);
-//		g1=G.copy();
-//		System.out.println(g1);
+		//		g1=G.copy();
+		//		System.out.println(g1);
 	}
 	private directed_weighted_graph _DWGraph;
 	// count the number of visited
@@ -147,15 +156,15 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
 
-		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) 
+		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) {
 			return null;
+		}
 		List<node_data>  c = new ArrayList<node_data>();
 
 		if(src==dest) {
 			c.add(_DWGraph.getNode(src));
 			return c;
 		}
-
 		ClearEverything();
 		dijkstraAlgo(src);
 		//if the parent of node dest equal to -1 we returns null.
@@ -185,9 +194,9 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		try {
 
 			Gson gson =  new GsonBuilder().create();
-			String j=	gson.toJson(new serialize().serialize(_DWGraph, getClass(), null));
+			String stringJson=	gson.toJson(new serialize().serialize(_DWGraph, getClass(), null));
 			FileWriter fw = new FileWriter(file);
-			fw.write(j);
+			fw.write(stringJson);
 			fw.flush();
 			fw.close();
 			return true;
@@ -244,7 +253,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 		}
 
-		
+
 
 	}
 	private class serialize implements JsonSerializer<directed_weighted_graph>{
@@ -276,7 +285,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	}
 
 	/**
-	 * This algorithm makes it possible to go over a weighted undirected graph
+	 * This algorithm makes it possible to go over a weighted directed graph
 	 * And find the cheapest ways from the source node to the rest of the graph nodes.
 	 * The weights in the graph symbolize distance. 
 	 * The shortest route between two points means the route with the lowest amount of weights between the two vertices.
@@ -287,30 +296,22 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 		PriorityQueue<node_data> p = new PriorityQueue<node_data>(new minDistanse());
 
-
 		_DWGraph.getNode(src).setWeight(0.0);
 		p.add(_DWGraph.getNode(src));
-
 		while(!p.isEmpty()) {
-
 			//update the n node at the cheapest node and delete it from the Priority Queue p 
 			node_data n = p.poll();
 			//running on the neighbors of n node
 			for(edge_data neighbor: _DWGraph.getE(n.getKey())) {
 				//If we did not visited in this node we will enter to the if
 				if(_DWGraph.getNode(neighbor.getDest()).getInfo()=="false") {
-					//				if(neighbor.getInfo()=="false") {
 					//Calculate the updated price(Tag) of n node + the price of the side between n and its neighbor	(neighbor)				
 					double total =n.getWeight()+neighbor.getWeight();
-					if(neighbor.getWeight()>total) {
-						//System.out.println(total+"-->"+neighbor.getKey());
-
+					if(_DWGraph.getNode(neighbor.getDest()).getWeight()>total) {
 						//updated tag,PriorityQueue p and parent of node neighbor.
 						_DWGraph.getNode(neighbor.getDest()).setWeight(total);
-						//						neighbor.setTag(total);
 						p.add(_DWGraph.getNode(neighbor.getDest()));
 						_DWGraph.getNode(neighbor.getDest()).setTag(n.getKey());
-						//						((node_data) neighbor).setParent(n);
 
 					}
 
