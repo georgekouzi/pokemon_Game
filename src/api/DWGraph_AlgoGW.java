@@ -105,12 +105,12 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		//		//
 		//		//g.removeNode(3);
 		//		for(node_data n :algo.shortestPath(0, 4)) {
-		//			System.out.println(n.getKey());
+//					System.out.println(n.getKey());
 		//		}
 		System.out.println(algo.isConnected());
 		System.out.println(g.edgeSize());
 
-		//		dw_graph_algorithms G= new DWGraph_AlgoGW();
+				dw_graph_algorithms G= new DWGraph_AlgoGW();
 		//		       G.init(g);
 		//				G.save("hg.json");
 		//				G.load("hg.json");
@@ -216,7 +216,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) {
 			return null;
 		}
-		List<node_data>  c = new ArrayList<node_data>();
+		List<node_data>  c = new ArrayList<>();
 
 		if(src==dest) {
 			c.add(_DWGraph.getNode(src));
@@ -298,16 +298,13 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			return true;
 		}
 		SCCTarjan();
-		if (_count_connected_graphs==1)
-			return true;
-		else
-			return false;	
+		return _count_connected_graphs == 1;
 	}
 
 	private void SCCTarjan() {
 		ClearEverything();
 		for (node_data n :_DWGraph.getV())
-			if (n.getInfo()=="false") {
+			if (n.getInfo().equals("false")) {
 				dfs(n);
 			}
 	}
@@ -323,7 +320,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		boolean isComponentRoot = true;
 		n.setInfo("true");
 		for (edge_data  v : getGraph().getE(n.getKey())) {
-			if (getGraph().getNode(v.getDest()).getInfo()=="false") {
+			if (getGraph().getNode(v.getDest()).getInfo().equals("false")) {
 				dfs(getGraph().getNode(v.getDest()));
 			}
 			if (lowlink.get(n.getKey()) > lowlink.get(v.getDest())) {
@@ -421,7 +418,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	private void  dijkstraAlgo(int src) {
 		System.out.println("inn");
 
-		PriorityQueue<node_algo> p = new PriorityQueue<node_algo>(new minDistanse());
+		PriorityQueue<node_algo> p = new PriorityQueue<>(new minDistanse());
 		node_info.put(src,new node_algo(src));
 		node_info.get(src).dist=0.0;
 		p.add(node_info.get(src));
@@ -436,7 +433,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 					node_info.put(neighbor.getDest(), new node_algo(neighbor.getDest()));
 				}
 				//If we did not visited in this node we will enter to the if
-				if(node_info.get(neighbor.getDest()).vis==false) {	
+				if(!node_info.get(neighbor.getDest()).vis) {
 					//Calculate the updated price(Tag) of n node + the price of the side between n and its neighbor	(neighbor)				
 					double total =node_info.get(n.id).dist+neighbor.getWeight();
 					if(node_info.get(neighbor.getDest()).dist>total) {
@@ -458,7 +455,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 	}
 	private class node_algo{
-		private	int id;
+		private	final int id;
 		private	int pereants; 
 		private double dist;
 		private boolean vis;
