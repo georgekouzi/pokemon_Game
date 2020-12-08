@@ -13,20 +13,20 @@ public class NodeData implements node_data,Serializable {
 	}
 	private int _key;
 	private static int _k=0;
-	private Point3D _Location ;
+	private geo_location _Location ;
 	private double _Weight;
 	private String Info; 
 	private int Tag;
 
 	public NodeData() {
 		_key=_k++;
-		_Location=null;
+		_Location=new Point3D(0.0,0.0,0.0);
 		_Weight=0;
 		Tag=0;
 	}
 	public NodeData(int k) {
 		_key=k;
-		_Location=null;
+		_Location=new Point3D(0.0,0.0,0.0);
 		_Weight=0;
 		Tag=0;
 	}
@@ -43,7 +43,7 @@ public class NodeData implements node_data,Serializable {
 
 	@Override
 	public void setLocation(geo_location p) {
-		_Location=(Point3D) p;
+		_Location= p;
 	}
 
 	@Override

@@ -234,7 +234,7 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 		String s="";
 		for(node_data i : getV()) {
-			s+="\n"+"Node= "+ i.getKey()+"\n";
+			s+="\n"+"Node= "+ i.getKey()+" in position: "+i.getLocation()+"\n";
 			if(!_edgeData.containsKey(i))
 				s+="The node has no connections"+"\n";
 			else {

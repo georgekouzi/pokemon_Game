@@ -3,6 +3,8 @@ package api;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +42,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
-		g.addNode(new NodeData());
+		//		g.addNode(new NodeData());
 
 		g.connect(0, 3, 8.22);
 		g.connect(1, 2, 4.0);
@@ -92,8 +94,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 		//}
-		dw_graph_algorithms algo= new DWGraph_AlgoGW();
-		algo.init(g);
+		//		dw_graph_algorithms algo= new DWGraph_AlgoGW();
+		//		algo.init(g);
 		//		System.out.println(algo.shortestPath(1, 3));
 		//		algo.shortestPath(1, 3);
 
@@ -105,17 +107,22 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		//		//
 		//		//g.removeNode(3);
 		//		for(node_data n :algo.shortestPath(0, 4)) {
-//					System.out.println(n.getKey());
+		//					System.out.println(n.getKey());
 		//		}
-		System.out.println(algo.isConnected());
-		System.out.println(g.edgeSize());
+		//		System.out.println(algo.isConnected());
+		//		System.out.println(g.edgeSize());
 
-				dw_graph_algorithms G= new DWGraph_AlgoGW();
-		//		       G.init(g);
-		//				G.save("hg.json");
-		//				G.load("hg.json");
+		dw_graph_algorithms G= new DWGraph_AlgoGW();
+		G.init(g);
+		//		System.out.println(G.getGraph());
+		//		G.save("hg.json");
+		//		G.load("hg.json");
 
-		//		G.load("A0");
+		//				G.load("A0");
+		G.save("hj");
+		G.load("hj");
+		//				System.out.println(G.getGraph());
+		//
 		//				g1=G.copy();
 		//		//		g.removeNode(5);
 		//				System.out.println(g1);
@@ -256,6 +263,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			Gson gson =  new GsonBuilder().create();
 			String stringJson=	gson.toJson(new serialize().serialize(_DWGraph, getClass(), null));
 			FileWriter fw = new FileWriter(file);
+
 			fw.write(stringJson);
 			fw.flush();
 			fw.close();
@@ -277,8 +285,10 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			Gson gson = build.create();			
 			FileReader reader = new FileReader(file);
 			directed_weighted_graph newg= gson.fromJson(reader, directed_weighted_graph.class) ; 
+			System.out.println(newg);
+
 			init(newg);
-			reader.close();
+			reader.close();  
 			return true;
 		}
 		catch (Exception e) {
@@ -370,7 +380,6 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 				g.connect(copy.getAsJsonObject().get("src").getAsInt(), copy.getAsJsonObject().get("dest").getAsInt(), copy.getAsJsonObject().get("w").getAsDouble());
 			}
 
-
 			return g;
 
 		}
@@ -381,19 +390,22 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	private class serialize implements JsonSerializer<directed_weighted_graph>{
 		@Override
 		public JsonElement serialize(directed_weighted_graph graph, Type arg1, JsonSerializationContext arg2) {
-			JsonObject nodeObject = new JsonObject();
-			JsonObject edgeObject = new JsonObject();
+
 			JsonArray edgeJsonArray = new JsonArray();
 			JsonArray nodeJsonArray = new JsonArray();
 			for(node_data node :graph.getV()) {
+				JsonObject nodeObject = new JsonObject();
 				nodeObject.addProperty("pos", node.getLocation().toString());
 				nodeObject.addProperty("id", node.getKey());
 				nodeJsonArray.add(nodeObject);
+
 				for(edge_data edge :graph.getE(node.getKey())) {
+					JsonObject edgeObject = new JsonObject();
 					edgeObject.addProperty("src",edge.getSrc());
 					edgeObject.addProperty("w",edge.getWeight());
 					edgeObject.addProperty("dest",edge.getDest());
 					edgeJsonArray.add(edgeObject);
+
 				}
 			}
 
@@ -403,8 +415,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			return jsonObject;
 		}
 
-
 	}
+
 
 	/**
 	 * This algorithm makes it possible to go over a weighted directed graph
