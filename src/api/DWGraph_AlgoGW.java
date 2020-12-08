@@ -40,7 +40,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
-		//				g.addNode(new NodeData());
+						g.addNode(new NodeData());
 
 		g.connect(0, 3, 8.22);
 		g.connect(1, 2, 4.0);
