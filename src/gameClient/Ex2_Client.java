@@ -19,10 +19,10 @@ public class Ex2_Client implements Runnable{
 		Thread client = new Thread(new Ex2_Client());
 		client.start();
 	}
-	
+	static int count =0;
 	@Override
 	public void run() {
-		int scenario_num = 11;
+		int scenario_num = 15;
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
 	//	int id = 999;
 	//	game.login(id);
@@ -35,8 +35,8 @@ public class Ex2_Client implements Runnable{
 		_win.setTitle("Ex2 - OOP: (NONE trivial Solution) "+game.toString());
 		int ind=0;
 		long dt=100;
-		
-		while(game.isRunning()) {
+		int i=10;
+		while(i!=0) {
 			moveAgants(game, gg);
 			try {
 				if(ind%1==0) {_win.repaint();}
@@ -46,10 +46,12 @@ public class Ex2_Client implements Runnable{
 			catch(Exception e) {
 				e.printStackTrace();
 			}
+		i--;
 		}
 		String res = game.toString();
 
 		System.out.println(res);
+		System.out.println(count);
 		System.exit(0);
 	}
 	/** 
@@ -60,6 +62,7 @@ public class Ex2_Client implements Runnable{
 	 * @param
 	 */
 	private static void moveAgants(game_service game, directed_weighted_graph gg) {
+		
 		String lg = game.move();
 		List<CL_Agent> log = Arena.getAgents(lg, gg);
 		_ar.setAgents(log);
@@ -71,13 +74,18 @@ public class Ex2_Client implements Runnable{
 			CL_Agent ag = log.get(i);
 			int id = ag.getID();
 			int dest = ag.getNextNode();
+			System.out.println(dest);
 			int src = ag.getSrcNode();
 			double v = ag.getValue();
 			if(dest==-1) {
+				count++;
 				dest = nextNode(gg, src);
 				game.chooseNextEdge(ag.getID(), dest);
 				System.out.println("Agent: "+id+", val: "+v+"   turned to node: "+dest);
+			     System.out.println("in "+game.getAgents());
 			}
+			else {System.out.println("not in : "+game.getAgents());}
+
 		}
 	}
 	/**
