@@ -2,14 +2,20 @@ package gameClient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,11 +38,20 @@ public class GUI extends JFrame{
 	private int _ind;
 	private Arena _ar;
 	private gameClient.util.Range2Range _w2f;
-	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\pokemonBattleFieldTesting.png");
+
+    private BufferedImage img;
+	private static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\pokemonBattleFieldTesting.png");
+	
+    protected JFrame mainWindow;
+    
 
 	public GUI()
 	{
-
+		try {
+			img = ImageIO.read(folderInput);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 		 _ind = 0;
 		setLayout(new BorderLayout());
 		 background=new JLabel(new ImageIcon(folderInput.getAbsolutePath()));
@@ -44,24 +59,29 @@ public class GUI extends JFrame{
 		background.setLayout(new FlowLayout());
 		background.setVisible(true);
 		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
-
+	
 		setTitle("Pokemon");
 		pack(); // automatically size the window to fit its components
 		setLocationRelativeTo(null); // center this window on the screen
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
+
 	}
 	
 	GUI(String a) {
 		super(a);
 		 _ind = 0;
-		
+			setSize(1500, 3000);
 	}
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
 		background.setVisible(true);
 	}
-
+	
+	public Dimension getPreferredSize() {
+		return img == null ? new Dimension(200, 200) : new Dimension(img.getWidth(), img.getHeight());
+	}
+	
 	private void updateFrame() {
 		Range rx = new Range(20,this.getWidth()-20);
 		Range ry = new Range(this.getHeight()-10,150);
@@ -74,13 +94,22 @@ public class GUI extends JFrame{
 	public void paint(Graphics g) {
 		int w = this.getWidth();
 		int h = this.getHeight();
-		g.clearRect(0, 0, w, h);
+		
 	//	updateFrame();
 		drawPokemons(g);
 		drawGraph(g);
 		drawAgants(g);
 		drawInfo(g);
-		background.setVisible(true);
+		super.paintComponents(g);
+		if (img != null) {
+			Graphics2D g2d = (Graphics2D) g.create();
+
+			int x = (getWidth() - img.getWidth()) / 2;
+			int y = (getHeight() - img.getHeight()) / 2;
+
+			g2d.drawImage(img, x, y, this);
+			g2d.dispose();
+		}
 		
 	}
 	private void drawInfo(Graphics g) {
@@ -105,6 +134,7 @@ public class GUI extends JFrame{
 				drawEdge(e, g);
 			}
 		}
+		
 	}
 	private void drawPokemons(Graphics g) {
 		List<CL_Pokemon> fs = _ar.getPokemons();
@@ -115,7 +145,7 @@ public class GUI extends JFrame{
 			
 			CL_Pokemon f = itr.next();
 			Point3D c = f.getLocation();
-			int r=10;
+			int r=17;
 			g.setColor(Color.green);
 			if(f.getType()<0) {g.setColor(Color.orange);}
 			if(c!=null) {

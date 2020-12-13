@@ -34,7 +34,6 @@ public class Ex2 {
 		
 		if(!client.isAlive()) 
 			run.set(false);	
-		
 	}
 	
 

@@ -120,16 +120,16 @@ public class BackgroundImageJFrame extends JFrame
 				if(id > 0){
 					_id = id;
 				}
-			
-				Thread client = new Thread(new Pokemon_Game(_scenario));
-			
-				client.start();
-				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
-				Music.start();
-
-				if(!client.isAlive())
-
-					run.set(false);	
+				
+			 new Ex2(_scenario);
+		
+//				client.start();
+//				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
+//				Music.start();
+//
+//				if(!client.isAlive())
+//
+//					run.set(false);	
 			}
 
 		});
