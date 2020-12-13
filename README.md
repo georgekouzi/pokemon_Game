@@ -21,6 +21,7 @@ Each Pokemon has a different score, when a trainer captures a Pokemon he accumul
 2) Once you have chosen which stage you want to play you need to put our id. 
 then game will start running with a time limit - each game has its own time limit.
 
-   3)After the game is over or while you can see the results that each agent has accumulated and his transitions from node to node.
+3) After the game is over or while you can see the results that each agent has accumulated and his transitions from node to node.
+
 
 
