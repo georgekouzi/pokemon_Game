@@ -1,5 +1,23 @@
 package gameClient;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import api.directed_weighted_graph;
 import api.edge_data;
 import api.geo_location;
@@ -8,25 +26,33 @@ import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.Iterator;
-import java.util.List;
+public class GUI extends JFrame{
 
-/**
- * This class represents a very simple GUI class to present a
- * game on a graph - you are welcome to use this class - yet keep in mind
- * that the code is not well written in order to force you improve the
- * code and not to take it "as is".
- *
- */
-public class MyFrame extends JFrame{
+	private static JLabel background;
 	private int _ind;
 	private Arena _ar;
 	private gameClient.util.Range2Range _w2f;
-	MyFrame(String a) {
+	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+
+	public GUI()
+	{
+		super("pokemon");
+		 _ind = 0;
+		setLayout(new BorderLayout());
+		 background=new JLabel(new ImageIcon(folderInput.getAbsolutePath()));
+		add(background);
+		background.setLayout(new FlowLayout());
+	
+		setTitle("Pokemon");
+		pack(); // automatically size the window to fit its components
+		setLocationRelativeTo(null); // center this window on the screen
+		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
+		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
+	}
+	
+	GUI(String a) {
 		super(a);
-		int _ind = 0;
+		 _ind = 0;
 		
 	}
 	public void update(Arena ar) {
@@ -130,4 +156,27 @@ public class MyFrame extends JFrame{
 	}
 	
 
+	public static void main(String args[])
+	{
+		/**
+		 * You really need to get in the habit of creating GUI objects in the following way, as recommended by Oracle
+		 * @see http://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
+		 */
+		// 
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+
+				//				File imageFile = MyFileChooser.chooseFile("Image Files (png & jpg)", "png", "jpg");
+				if (folderInput != null) {
+
+
+					GUI frame = new GUI();
+					frame.setVisible(true); // call setVisible(true) last of all
+					
+				}
+			}
+		});
+	}
+	
 }

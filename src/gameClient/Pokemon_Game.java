@@ -43,7 +43,9 @@ public class Pokemon_Game implements Runnable {
 	// This HashMap Keeps the agent's ID inside a key and the value of that agent will be the Pokemon that agent looking for.
 	private static HashMap<Integer,CL_Pokemon> PokemonToAgent; 
 	private static int scenaio;
-	private static MyFrame _win;
+	private static GUI _win;
+	private static GUI gui;
+	
 	
 	public Pokemon_Game() {
 		_Arena=new Arena();
@@ -77,19 +79,13 @@ public class Pokemon_Game implements Runnable {
 		reade_data(game.getGraph(),"graph_game");
 		//This function allows you to put the Pokemon on the graph and in addition place the agents on the graph.
 		PutOnBoard(game);
-		_win = new MyFrame("test Ex2");
-		_win.setSize(1000, 700);
-		_win.update(_Arena);
+	
 		
 		_win.show();
 
 		game.startGame();
 		_win.setTitle("Pokemon");
-		_win.setVisible(true);
-
-		_win.setLocationRelativeTo(null); // center this window on the screen
-		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // when this window is closed, exit this application
-	
+		
 		play(game);
 
 
@@ -105,7 +101,7 @@ public class Pokemon_Game implements Runnable {
 	 */
 	private static void play(game_service game) {
 		while(game.isRunning()) {
-			int ind=10;
+			int ind=60;
 			moveAgants(game);
 			if(ind%1==0) {_win.repaint();}
 			try {
@@ -157,7 +153,7 @@ public class Pokemon_Game implements Runnable {
 		PokemonUpdate(game);
 		_Arena.setAgents(AgentsList);
 		_Arena.setPokemons(_Pokemon_data);
-
+		
 		for(int i=0;i<AgentsList.size();i++) {
 			CL_Agent Agent=AgentsList.get(i);
 			//If the agent reached the previous destination
@@ -252,6 +248,14 @@ public class Pokemon_Game implements Runnable {
 		PokemonUpdate(game);
 		_Arena.setPokemons(_Pokemon_data);
 		putAgents(game);
+	
+		_win = new GUI("test Ex2");
+		_win.setSize(1000, 700);
+		_win.update(_Arena);
+		_win.setVisible(true);
+		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
 	}
 
 
@@ -282,6 +286,7 @@ public class Pokemon_Game implements Runnable {
 		Collections.sort(_Pokemon_data, new maxValue());
 		for (CL_Pokemon p: _Pokemon_data) {
 			Arena.updateEdge(p,algo.getGraph());
+			
 		}
 	}
 /**
