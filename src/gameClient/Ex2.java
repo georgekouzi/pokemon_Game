@@ -8,8 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Ex2 {
 	//When the game is over we want all the actions
 	//That facts in parallel will also over.
-	private final static AtomicBoolean run = new AtomicBoolean(false);
-	
+	private final static AtomicBoolean run = new AtomicBoolean();
 	public static void main(String[] args) {
 		Thread client = new Thread(new Pokemon_Game());
 		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));

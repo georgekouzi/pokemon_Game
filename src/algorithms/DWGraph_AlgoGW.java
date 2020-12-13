@@ -3,8 +3,6 @@ package algorithms;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +31,16 @@ import api.node_data;
 import dataStructure.DWGraph_DS;
 import dataStructure.NodeData;
 import gameClient.util.Point3D;
-
+/**
+ *This class knows how to do operations on graphs.
+ *We can check if the graph is Strongly Connected, check the cheap path between two nodes and the cheap distance between two nodes.
+ *We can save the graph on json file and load the graph from json file.
+ *This class uses a DFS algorithm that allows running on all nodes in the graph and do transpoz to the graph edge in run time O(n+m).
+ *This class uses a Dijkstra algorithm that allows running on all nodes in the graph and find the cheap path two nodes in run time O(E*log(V)).
+ *https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm.
+ *https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm.
+ *@author George kouzy and Dolev Saadia. *
+ */
 
 public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
@@ -50,7 +57,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
 		g.addNode(new NodeData());
-		//		g.addNode(new NodeData());
+		g.addNode(new NodeData());
 
 		g.connect(0, 3, 8.22);
 		g.connect(1, 2, 4.0);
@@ -59,7 +66,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		g.connect(3, 1, 6.565);
 		g.connect(4, 2, 1.2);
 		g.connect(4, 0, 7.5);
-		//		g.connect(0, 2, 8.22);
+		g.connect(0, 2, 8.22);
+
 		//		g.connect(4, 3, 1.2);
 		//
 		//		directed_weighted_graph g1=new DWGraph_DS();
@@ -102,8 +110,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 		//}
-		//		dw_graph_algorithms algo= new DWGraph_AlgoGW();
-		//		algo.init(g);
+		dw_graph_algorithms algo= new DWGraph_AlgoGW();
+		algo.init(g);
 		//		System.out.println(algo.shortestPath(1, 3));
 		//		algo.shortestPath(1, 3);
 
@@ -117,7 +125,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		//		for(node_data n :algo.shortestPath(0, 4)) {
 		//					System.out.println(n.getKey());
 		//		}
-		//		System.out.println(algo.isConnected());
+		System.out.println(algo.isConnected());
 		//		System.out.println(g.edgeSize());
 
 		dw_graph_algorithms G= new DWGraph_AlgoGW();
@@ -139,13 +147,15 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		//		System.out.println(g1);
 	}
 	private directed_weighted_graph _DWGraph;
-	private static int _count_connected_graphs=0;
-	private HashMap<Integer,node_algo> node_info;
-	private HashMap<Integer,Integer> lowlink;
-	private Stack<node_data> stack;
+	private TarjanAlgo Tarjan_Algo;
+	private HashMap<Integer,nodeAlgo> node_info;
+
+	//We save the modeCount and the source node so that we do not need to  join the dijkstra algorithm again. 
+	//if the graph has not changed and we look for the short distances or short list path to the same source node.
+	//////////////////////////////////////////////
 	private int dijkstraSrc;
 	private int modeCount;
-	private int count;
+	//////////////////////////////////////////////
 
 
 	//////Constructor///////////////
@@ -153,19 +163,29 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		_DWGraph=new DWGraph_DS();	
 		dijkstraSrc=-1;
 	}
-
+	/**
+	 * This function allows you to point this graph.
+	 * @param g
+	 */
 
 	@Override
 	public void init(directed_weighted_graph g) {
 		_DWGraph=g;
 		modeCount=_DWGraph.getMC();
 	}
-
+	/**
+	 * This function return this graph.
+	 * @return -this graph
+	 */
 	@Override
 	public directed_weighted_graph getGraph() {
 		return _DWGraph;
 	}
-
+	/**
+	 * This function returns a deep copy of the graph
+	 * run time o(m+n)
+	 * @return - new graph.
+	 */
 	@Override
 	public directed_weighted_graph copy() {
 		directed_weighted_graph g =new DWGraph_DS();
@@ -188,6 +208,31 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	}
 
 
+	/**
+	 *   This function checks if there is a Path from each node to all the nodes With Dfs Algorithm-
+	 *   this is an improved DFS called Tarjan Algorithm.
+	 *   after DFS Algorithm  we checking the number of connected graphs(_count_connected_graphs) if _count_connected_graphs equal to 1
+	 *   So the graph is strongly connected and can be reached from any node to any other node.
+	 *   we use inner class Tarjan_Algo- serves data Structure: stack ,lowlink ,count and _count_connected_graphs.
+	 *   run time O(E + V): E- the number of ribs, V- the number of nodes.  
+	 *   @return -True if and only if (iff) there is a valid path from each node to each else return false
+	 */
+
+
+	@Override
+	public boolean isConnected() {
+		if(_DWGraph.nodeSize()==0) {
+			return true;
+		}
+		Tarjan_Algo= new TarjanAlgo();
+		for (node_data n :_DWGraph.getV()) {
+			if (n.getInfo().equals("false")) 
+				DFS(n);
+		}
+
+		return (Tarjan_Algo._count_connected_graphs == 1);
+
+	}
 
 
 
@@ -213,7 +258,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		//if there no path we return -1 like Infinite
 		if(node_info.get(dest).pereants==-1)
 			return -1;
-		//the distance from the source to the destination save in destination tag
+		//the distance from the source to the destination save in destination dist in inner class nodeAlgo.
 		return node_info.get(dest).dist;
 	}
 	/**
@@ -229,9 +274,9 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	public List<node_data> shortestPath(int src, int dest) {
 
 		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) {
-			System.out.println("innnnnnnnn");
 			return null;
 		}
+		//Create a list that will store the cheapest list from the destination node to the source node.
 		List<node_data>  c = new ArrayList<>();
 
 		if(src==dest) {
@@ -245,8 +290,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 		//if the parent of node  equal to -1 we returns null.
 		if(node_info.get(dest).pereants==-1) { return null;};
-		//Create a list that will store the cheapest list from the destination node to the source node.
-		node_algo n = node_info.get(dest);
+
+		nodeAlgo n = node_info.get(dest);
 		//run from destination node to the source node.
 		while(n.id!=src) {
 			//add destination--> add parent destination-->add parent of parent destination-->add...Until n is equal to the source node
@@ -263,6 +308,19 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 	}
+	/**
+	 * Saves this directed weighted graph to this json file name(String file).
+	 * This function path of json file name on the computer. 
+	 * The default path to this file is in the project folder.
+	 * we use inner class call serialize- Which allows us to extract the information we need and write it into the json file.
+	 * The information we want to keep is:
+	 *array of all edges and array of all nodes.
+	 *run time: O(E*V)- E - edges and V-nodes.
+	 *we use gson jar to get json file saved.
+	 * if the save successfully The default path to this file is in the project folder.
+	 * @param  String file - The file name.
+	 * @return  - if the file was successfully saved return true else false
+	 */
 
 	@Override
 	public boolean save(String file) {
@@ -285,7 +343,18 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 	}
 
-
+	/**
+	 * Load this json file (directed weighted graph).
+	 * This function path of json file name on the computer. 
+	 * The default path to this file is in the project folder.
+	 * we use inner class call deserialize- Which allows us to extract the information from the json file that we need and read it and create a new graph .
+	 * and its data can be used to recreate the object in memory.
+	 *The information we want to load is: array of all edges and array of all nodes.
+	 *run time: O(E*V)- E - edges and V-nodes.
+	 *we use gson jar to get json file load.
+	 * @param  String file - The file name.
+	 * @return  - if the file was successfully load return true else false
+	 */
 	@Override
 	public boolean load(String file) {
 		try {
@@ -305,57 +374,33 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		}			
 
 	}
-	/**
-	 * Returns true if and only if (iff) there is a valid path from each node to each
-	 * other node. NOTE: assume directional graph (all n*(n-1) ordered pairs).
-	 * @return
-	 */
-	@Override
-	public boolean isConnected() {
-		if(_DWGraph.nodeSize()==0) {
-			return true;
-		}
-		SCCTarjan();
-		return _count_connected_graphs == 1;
-	}
-
-	private void SCCTarjan() {
-		ClearEverything();
-		for (node_data n :_DWGraph.getV())
-			if (n.getInfo().equals("false")) {
-				dfs(n);
-			}
-	}
 
 
 
-
-
-	void dfs(node_data n) {
-		stack.add(n);
-		lowlink.put(n.getKey(), count++);
+	private void DFS(node_data n) {
+		Tarjan_Algo.stack.add(n);
+		Tarjan_Algo.lowlink.put(n.getKey(), Tarjan_Algo.count++);
 
 		boolean isComponentRoot = true;
 		n.setInfo("true");
 		for (edge_data  v : getGraph().getE(n.getKey())) {
 			if (getGraph().getNode(v.getDest()).getInfo().equals("false")) {
-				dfs(getGraph().getNode(v.getDest()));
+				DFS(getGraph().getNode(v.getDest()));
 			}
-			if (lowlink.get(n.getKey()) > lowlink.get(v.getDest())) {
-				lowlink.replace(n.getKey(),lowlink.get(v.getDest()));
+			if (Tarjan_Algo.lowlink.get(n.getKey()) > Tarjan_Algo.lowlink.get(v.getDest())) {
+				Tarjan_Algo.lowlink.replace(n.getKey(),Tarjan_Algo.lowlink.get(v.getDest()));
 				isComponentRoot = false;
 			}
 		}
 
 
 		if (isComponentRoot) {
-			while (true) {
-				node_data node= stack.pop();
-				lowlink.replace(n.getKey(),Integer.MAX_VALUE);
-				if (node.getKey() == n.getKey())
-					break;
+			node_data node= Tarjan_Algo.stack.pop();
+			while (node.getKey() == n.getKey()) {
+				node=Tarjan_Algo.stack.pop();
+				Tarjan_Algo.lowlink.replace(node.getKey(),Integer.MAX_VALUE);
 			}
-			_count_connected_graphs++;
+			Tarjan_Algo._count_connected_graphs++;
 		}
 
 	}
@@ -363,11 +408,140 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 
+	/**
+	 * This algorithm makes it possible to go over a weighted directed graph
+	 * And find the cheapest ways from the source node to the rest of the graph nodes.
+	 * The weights in the graph symbolize distance. 
+	 * The shortest route between two points means the route with the lowest amount of weights between the two vertices.
+	 * we use inner class that call nodeAlgo to save all the  data that dijkstra algorithm need.
+	 * Ran time- O(E*log(V)) because we create PriorityQueue and compare the node by the minimum distance .
+	 * @param src - the source node
+	 */
+
+	private void  dijkstraAlgo(int src) {
+
+		PriorityQueue<nodeAlgo> p = new PriorityQueue<>(new minDistanse());
+		node_info.put(src,new nodeAlgo(src));
+		node_info.get(src).dist=0.0;
+		p.add(node_info.get(src));
+
+		while(!p.isEmpty()) {
+			//update the n node at the cheapest node and delete it from the Priority Queue p 
+			nodeAlgo n = p.poll();
+			//running on the neighbors of n node
+			for(edge_data neighbor: _DWGraph.getE(n.id)) {
+
+				if(!node_info.containsKey(neighbor.getDest())) {
+					node_info.put(neighbor.getDest(), new nodeAlgo(neighbor.getDest()));
+				}
+				//If we did not visited in this node we will enter to the if
+				if(!node_info.get(neighbor.getDest()).vis) {
+					//Calculate the updated price(Tag) of n node + the price of the side between n and its neighbor	(neighbor)				
+					double total =node_info.get(n.id).dist+neighbor.getWeight();
+					if(node_info.get(neighbor.getDest()).dist>total) {
+						//updated tag,PriorityQueue p and parent of node neighbor.
+						node_info.get(neighbor.getDest()).dist=total;
+						p.add(node_info.get(neighbor.getDest()));
+						node_info.get(neighbor.getDest()).pereants=n.id;
+
+					}
+
+				}
+
+				//when we finish to visit in the node n we don't wont to visit in this node again 
+				n.vis=true;
+
+			}
+
+		}
+
+	}
+
+
+	/**
+	 * This function crate all the node tag,info and Parent
+	 * @param src -
+	 */
+	private void Update(int src) {
+		node_info=new HashMap<Integer,nodeAlgo>();
+		//
+		modeCount=_DWGraph.getMC();
+		dijkstraSrc=src;
+	}
+
+	/**
+	 * This inner class serves as an auxiliary class for the dijkstra algorithm enabling the creation of smart nodes
+	 * It keep the ID(id) of each node in our graph ,keep the node(pereants) that comes before the this node in the shortest path, 
+	 * also keeps the distance(dist) from the source point to the current node, 
+	 * and in addition keeps a Boolean variable(vis) that informs the algorithm if he visited this node or not.
+	 */
+
+	private class nodeAlgo{
+		private	final int id;
+		private	int pereants; 
+		private double dist;
+		private boolean vis;
+		nodeAlgo(int _id){
+			id=_id;
+			dist=Double.MAX_VALUE;
+			vis=false;
+			pereants=-1;
+		}
+
+	}
 
 
 
+	/**
+	 * This class serves as an auxiliary class for the Tarjan algorithm that uses an improved dfs algorithm.
+	 * This class makes use of: 
+	 * 1)_count_connected_graphs- Count how many graphs we have connected, 
+	 * if we accept that there is only one graph connected then we can say that our graph is strongly connected.
+	 * 2)Stack-
+	 * 
+	 *
+	 */
+	private class TarjanAlgo{
+		private int _count_connected_graphs;
+		private Stack<node_data> stack;
+		private HashMap<Integer,Integer> lowlink;
+		private int count;
 
 
+		TarjanAlgo(){
+			lowlink= new HashMap<Integer,Integer>();
+			stack = new Stack<node_data>();
+			_count_connected_graphs=0;
+			count=0;
+
+
+			for (node_data i : _DWGraph.getV()) {
+				i.setInfo("false");
+				lowlink.put(i.getKey(), 0);
+
+			}
+
+		}
+
+
+	}
+
+	/**
+	 * inner class allows as to compare between two node distance.
+	 */
+	private class minDistanse implements Comparator<nodeAlgo> {
+		public int compare(nodeAlgo dist1, nodeAlgo dist2) {
+			return  (int) (dist1.dist-dist2.dist);
+
+		}
+
+	}
+	/**
+	 * This class is used as an auxiliary class for the load function. Allows you to disassemble a json file into an array
+	 * of nodes and array of edges and in the transition to the new graph we insert the new vertices and edges.
+	 *This class inherits from JsonDeserializer which makes it easier for the gson 
+	 *to build a json file according to the parent in the function of the internal class deserialize.
+	 */
 
 	private class deserialize implements JsonDeserializer<directed_weighted_graph>{
 
@@ -395,6 +569,12 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 	}
+	/**
+	 * This class is used as an auxiliary class for the save function. Allows you to to read a json array file.
+	 * read json array file  of edges and nodes.
+	 *This class inherits from JsonSerializer which makes it easier for the gson 
+	 *to read a json file according to the parent in the function of the internal class serialize.
+	 */
 	private class serialize implements JsonSerializer<directed_weighted_graph>{
 		@Override
 		public JsonElement serialize(directed_weighted_graph graph, Type arg1, JsonSerializationContext arg2) {
@@ -424,104 +604,6 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		}
 
 	}
-
-
-	/**
-	 * This algorithm makes it possible to go over a weighted directed graph
-	 * And find the cheapest ways from the source node to the rest of the graph nodes.
-	 * The weights in the graph symbolize distance. 
-	 * The shortest route between two points means the route with the lowest amount of weights between the two vertices.
-	 * Ran time- O(E*log(V)) because we create PriorityQueue and compare the node by the minimum distance .
-	 * @param src - the source node
-	 */
-
-	private void  dijkstraAlgo(int src) {
-//		System.out.println("inn");
-
-		PriorityQueue<node_algo> p = new PriorityQueue<>(new minDistanse());
-		node_info.put(src,new node_algo(src));
-		node_info.get(src).dist=0.0;
-		p.add(node_info.get(src));
-
-		while(!p.isEmpty()) {
-			//update the n node at the cheapest node and delete it from the Priority Queue p 
-			node_algo n = p.poll();
-			//running on the neighbors of n node
-			for(edge_data neighbor: _DWGraph.getE(n.id)) {
-
-				if(!node_info.containsKey(neighbor.getDest())) {
-					node_info.put(neighbor.getDest(), new node_algo(neighbor.getDest()));
-				}
-				//If we did not visited in this node we will enter to the if
-				if(!node_info.get(neighbor.getDest()).vis) {
-					//Calculate the updated price(Tag) of n node + the price of the side between n and its neighbor	(neighbor)				
-					double total =node_info.get(n.id).dist+neighbor.getWeight();
-					if(node_info.get(neighbor.getDest()).dist>total) {
-						//updated tag,PriorityQueue p and parent of node neighbor.
-						node_info.get(neighbor.getDest()).dist=total;
-						p.add(node_info.get(neighbor.getDest()));
-						node_info.get(neighbor.getDest()).pereants=n.id;
-
-					}
-
-				}
-
-				//when we finish to visit in the node n we don't wont to visit in this node again 
-				n.vis=true;
-
-			}
-
-		}
-
-	}
-	private class node_algo{
-		private	final int id;
-		private	int pereants; 
-		private double dist;
-		private boolean vis;
-		node_algo(int _id){
-			id=_id;
-			dist=Double.MAX_VALUE;
-			vis=false;
-			pereants=-1;
-		}
-
-	}
-
-	/**
-	 * inner class allows as to compare between two node distance.
-	 */
-	private class minDistanse implements Comparator<node_algo> {
-		public int compare(node_algo dist1, node_algo dist2) {
-			return  (int) (dist1.dist-dist2.dist);
-
-		}
-
-	}
-
-	/**
-	 * This function cleans all the node tag,info and Parent
-	 */
-	private void Update(int src) {
-		node_info=new HashMap<Integer,node_algo>();
-		modeCount=_DWGraph.getMC();
-		dijkstraSrc=src;
-	}
-
-	private void ClearEverything() {
-		lowlink= new HashMap<Integer,Integer>();
-		stack = new Stack<node_data>();
-		count=0;
-		for (node_data i : _DWGraph.getV()) {
-			i.setInfo("false");
-			lowlink.put(i.getKey(), 0);
-		}
-
-
-	}
-
-
-
 
 
 

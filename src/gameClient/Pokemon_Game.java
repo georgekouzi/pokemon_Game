@@ -51,9 +51,9 @@ public class Pokemon_Game implements Runnable {
 
 	@Override
 	public void  run() {
-		int scenario_num = 23;
+		int scenario_num = 0;
 		game_service game= Game_Server_Ex2.getServer(scenario_num);		
-		game.login(311450068);
+		//		game.login(311450068);
 
 		//make json file and load it from file 
 		reade_data(game.getGraph(),"graph_game");
@@ -179,20 +179,25 @@ public class Pokemon_Game implements Runnable {
 		UntrackedPokemon();
 
 
-		int sortpht=Integer.MAX_VALUE;
+		//		int sortpht=Integer.MAX_VALUE;
+		double sortpht=Double.MAX_VALUE;
+
 		for(int i =0 ; i<_Pokemon_data.size();i++) {
 			List<node_data> p1=algo.shortestPath(Agent.getSrcNode(), _Pokemon_data.get(i).get_edge().getDest());
 			List<node_data> p=algo.shortestPath(Agent.getSrcNode(), _Pokemon_data.get(i).get_edge().getSrc());
+			double w1=algo.shortestPathDist(Agent.getSrcNode(), _Pokemon_data.get(i).get_edge().getDest());
+			double w=algo.shortestPathDist(Agent.getSrcNode(), _Pokemon_data.get(i).get_edge().getSrc());
+
 
 			if(p.size()<p1.size()) {
-				if(p1.size()>1&&p1.size()< sortpht) {
-					sortpht=p1.size();
+				if(w1>0.0&&w1< sortpht) {
+					sortpht=w1;
 					AgentPath.put(Agent.getID(), p1);
 					PokemonToAgent.put(Agent.getID(), _Pokemon_data.get(i));
 				}
 			}
-			else if(p.size()>1&&p.size()<sortpht) {
-				sortpht=p.size();
+			else if(w>0.0&&w< sortpht) {
+				sortpht=w;
 				AgentPath.put(Agent.getID(), p);
 				PokemonToAgent.put(Agent.getID(), _Pokemon_data.get(i));
 
@@ -252,12 +257,12 @@ public class Pokemon_Game implements Runnable {
 			Arena.updateEdge(p,algo.getGraph());
 		}
 	}
-/**
- * This function is used by us for the beginning of the game:
- * it allows the agents to be placed on the graph.
- * we can know the number of agents by read json information of the game.
- * We place the agents at the node that closest to the Pokemons.
- */
+	/**
+	 * This function is used by us for the beginning of the game:
+	 * it allows the agents to be placed on the graph.
+	 * we can know the number of agents by read json information of the game.
+	 * We place the agents at the node that closest to the Pokemons.
+	 */
 	private static  void putAgents(game_service game) {
 		JsonObject g =new JsonParser().parse(game.toString()).getAsJsonObject();
 		int numOfAgents=g.get("GameServer").getAsJsonObject().get("agents").getAsInt();
