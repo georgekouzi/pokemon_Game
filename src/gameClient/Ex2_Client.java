@@ -15,9 +15,14 @@ import java.util.List;
 public class Ex2_Client implements Runnable{
 	private static MyFrame _win;
 	private static Arena _ar;
-	public static void main(String[] a) {
+//	public static void main(String[] a) {
+//		Thread client = new Thread(new Ex2_Client());
+//		client.start();
+//	}
+	public Ex2_Client() {
 		Thread client = new Thread(new Ex2_Client());
 		client.start();
+		run();
 	}
 	static int count =0;
 	@Override
@@ -116,8 +121,6 @@ public class Ex2_Client implements Runnable{
 		_win = new MyFrame("test Ex2");
 		_win.setSize(1000, 700);
 		_win.update(_ar);
-
-	
 		_win.show();
 		String info = game.toString();
 		JSONObject line;
