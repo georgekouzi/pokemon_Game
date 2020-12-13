@@ -42,7 +42,7 @@ public class GUI extends JFrame{
 		 background=new JLabel(new ImageIcon(folderInput.getAbsolutePath()));
 		add(background);
 		background.setLayout(new FlowLayout());
-		
+		background.setVisible(true);
 		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
 
 		setTitle("Pokemon");
@@ -59,7 +59,7 @@ public class GUI extends JFrame{
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
-		
+		background.setVisible(true);
 	}
 
 	private void updateFrame() {
@@ -80,6 +80,7 @@ public class GUI extends JFrame{
 		drawGraph(g);
 		drawAgants(g);
 		drawInfo(g);
+		background.setVisible(true);
 		
 	}
 	private void drawInfo(Graphics g) {

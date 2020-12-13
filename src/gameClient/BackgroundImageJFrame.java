@@ -34,7 +34,7 @@ public class BackgroundImageJFrame extends JFrame
 	public BackgroundImageJFrame(File imageFile)
 	{
 		setLayout(new BorderLayout());
-		 background=new JLabel(new ImageIcon(imageFile.getAbsolutePath()));
+		background=new JLabel(new ImageIcon(imageFile.getAbsolutePath()));
 		add(background);
 		background.setLayout(new FlowLayout());
 		l1=new JLabel("start a new game");
@@ -59,14 +59,14 @@ public class BackgroundImageJFrame extends JFrame
 
 
 	public static void loginPanel(){
-		
-		 panel = new JPanel();
-		 login = new JFrame();
+
+		panel = new JPanel();
+		login = new JFrame();
 		login.setSize(330,160);
 		panel.setLayout(null);
 		// login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		login.add(panel);
-		 user = new JLabel("User:");
+		user = new JLabel("User:");
 		user.setBounds(10,20,80,25);
 
 		JLabel scene = new JLabel("Scenario:");
@@ -85,15 +85,15 @@ public class BackgroundImageJFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			            int scenario = _sceneNum.getSelectedIndex();
-			            _scenario = scenario;
-			
+				int scenario = _sceneNum.getSelectedIndex();
+				_scenario = scenario;
+
 			}
-			
+
 
 		});
-	
-	
+
+
 
 		Quit = new JButton("quit");
 		Quit.setBounds(10,80,120,30);
@@ -103,8 +103,8 @@ public class BackgroundImageJFrame extends JFrame
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				System.exit(0);
-				
-			
+
+
 			}
 
 		});
@@ -116,20 +116,23 @@ public class BackgroundImageJFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int id = Integer.parseInt(_userTxt.getText());
+				if(id > 0){
+					_id = id;
+				}
 			
-				Thread client = new Thread(new Pokemon_Game());
-				
+				Thread client = new Thread(new Pokemon_Game(_scenario));
+			
 				client.start();
 				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
 				Music.start();
-				
+
 				if(!client.isAlive())
-					
+
 					run.set(false);	
-				
 			}
-			
-         });
+
+		});
 
 		panel.add(user);
 		panel.add(scene);
@@ -141,7 +144,7 @@ public class BackgroundImageJFrame extends JFrame
 		login.setTitle("login");
 		login.setLocationRelativeTo(null); // center this window on the screen
 		login.setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
-	
+
 	}
 
 
@@ -162,13 +165,13 @@ public class BackgroundImageJFrame extends JFrame
 
 					BackgroundImageJFrame frame = new BackgroundImageJFrame(folderInput);
 					frame.setVisible(true); // call setVisible(true) last of all
-					
+
 				}
 			}
 		});
 
 
-}
+	}
 }
 
 
