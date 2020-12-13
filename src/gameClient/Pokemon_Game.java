@@ -1,4 +1,5 @@
 package gameClient;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -45,7 +46,7 @@ public class Pokemon_Game implements Runnable {
 	private static int scenaio;
 	private static GUI _win;
 	private static GUI gui;
-	
+	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
 	
 	public Pokemon_Game() {
 		_Arena=new Arena();
@@ -54,7 +55,7 @@ public class Pokemon_Game implements Runnable {
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
 		this.scenaio=0;
-		run();
+	
 		
 		
 	}
@@ -65,7 +66,6 @@ public class Pokemon_Game implements Runnable {
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
 		this.scenaio=scenaio;
-		run();
 		
 		
 	}
@@ -249,7 +249,7 @@ public class Pokemon_Game implements Runnable {
 		_Arena.setPokemons(_Pokemon_data);
 		putAgents(game);
 	
-		_win = new GUI("test Ex2");
+		_win = new GUI();
 		_win.setSize(1000, 700);
 		_win.update(_Arena);
 		_win.setVisible(true);

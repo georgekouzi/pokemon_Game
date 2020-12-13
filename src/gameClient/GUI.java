@@ -32,22 +32,23 @@ public class GUI extends JFrame{
 	private int _ind;
 	private Arena _ar;
 	private gameClient.util.Range2Range _w2f;
-	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\pokemonBattleFieldTesting.png");
 
 	public GUI()
 	{
-		super("pokemon");
+
 		 _ind = 0;
 		setLayout(new BorderLayout());
 		 background=new JLabel(new ImageIcon(folderInput.getAbsolutePath()));
 		add(background);
 		background.setLayout(new FlowLayout());
-	
+		
+		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
+
 		setTitle("Pokemon");
 		pack(); // automatically size the window to fit its components
 		setLocationRelativeTo(null); // center this window on the screen
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
-		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
 	}
 	
 	GUI(String a) {
@@ -58,6 +59,7 @@ public class GUI extends JFrame{
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
+		
 	}
 
 	private void updateFrame() {
@@ -66,6 +68,8 @@ public class GUI extends JFrame{
 		Range2D frame = new Range2D(rx,ry);
 		directed_weighted_graph g = _ar.getGraph();
 		_w2f = Arena.w2f(g,frame);
+		
+		
 	}
 	public void paint(Graphics g) {
 		int w = this.getWidth();

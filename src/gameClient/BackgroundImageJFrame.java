@@ -102,11 +102,8 @@ public class BackgroundImageJFrame extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-//				_win2 = new MyFrame(image);
-//				_win2.setTitle("Ex2 - OOP: (NONE trivial Solution)");
-//				_win.setSize(1000, 700);
-//				_win2.update(_ar);
-//				_win2.show();
+				System.exit(0);
+				
 			
 			}
 
@@ -119,9 +116,16 @@ public class BackgroundImageJFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				login.dispose();
-				new Ex2();
+			
+				Thread client = new Thread(new Pokemon_Game());
+				
+				client.start();
+				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
+				Music.start();
+				
+				if(!client.isAlive())
+					
+					run.set(false);	
 				
 			}
 			
@@ -140,8 +144,6 @@ public class BackgroundImageJFrame extends JFrame
 	
 	}
 
-	    
-
 
 	public static void main(String args[])
 	{
@@ -158,14 +160,15 @@ public class BackgroundImageJFrame extends JFrame
 				if (folderInput != null) {
 
 
-					frame = new BackgroundImageJFrame(folderInput);
+					BackgroundImageJFrame frame = new BackgroundImageJFrame(folderInput);
 					frame.setVisible(true); // call setVisible(true) last of all
 					
 				}
 			}
 		});
-	}
 
+
+}
 }
 
 
