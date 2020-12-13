@@ -8,12 +8,8 @@ import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,23 +24,15 @@ public class MyFrame extends JFrame{
 	private int _ind;
 	private Arena _ar;
 	private gameClient.util.Range2Range _w2f;
-	private Image image;
 	MyFrame(String a) {
 		super(a);
 		int _ind = 0;
 	}
-	 MyFrame(Image image) {
-        this.image = image;
-    }
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
 	}
-	@Override
-    public void paintComponents(Graphics g) {
-        super.paintComponents(g);
-        g.drawImage(image, 0, 0, this);
-    }
+
 	private void updateFrame() {
 		Range rx = new Range(20,this.getWidth()-20);
 		Range ry = new Range(this.getHeight()-10,150);
@@ -129,7 +117,6 @@ public class MyFrame extends JFrame{
 		geo_location fp = this._w2f.world2frame(pos);
 		g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 		g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
-		
 	}
 	private void drawEdge(edge_data e, Graphics g) {
 		directed_weighted_graph gg = _ar.getGraph();
@@ -140,7 +127,4 @@ public class MyFrame extends JFrame{
 		g.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
 	//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
 	}
-	
-
-
 }

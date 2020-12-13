@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="libs/okhttp-4.8.0.jar"/>
 	<classpathentry kind="lib" path="libs/okio-2.7.0.jar"/>
 	<classpathentry kind="lib" path="libs/gson-2.8.6.jar"/>
+	<classpathentry kind="lib" path="libs/jl1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
