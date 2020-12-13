@@ -10,15 +10,27 @@ public class Ex2 {
 	//That facts in parallel will also over.
 	private final static AtomicBoolean run = new AtomicBoolean(false);
 	
-	public static void main(String[] args) {
+	public Ex2(){
+		
 		Thread client = new Thread(new Pokemon_Game());
 		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
 		Music.start();
 		client.start();
+		
 		if(!client.isAlive()) 
 			run.set(false);	
+		
 	}
-
-
-
+	public Ex2(int scenario){
+		
+		Thread client = new Thread(new Pokemon_Game());
+		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
+		Music.start();
+		client.start();
+		
+		if(!client.isAlive()) 
+			run.set(false);	
+		
+	}
+	
 }

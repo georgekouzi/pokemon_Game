@@ -1,14 +1,10 @@
 package gameClient;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import api.dw_graph_algorithms;
-import okhttp3.internal.ws.RealWebSocket.Close;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 
@@ -25,22 +21,23 @@ public class BackgroundImageJFrame extends JFrame
 	private static JButton Quit;
 	private static JButton _loginButton;
 	private static JTextField _userTxt;
+	private static JLabel background;
+	private static JLabel user;
+	private static JLabel scene;
+	private static JPanel panel;
 	private static JFrame login;
-	private static MyFrame _win;
-	private static Arena _ar;
-	private static dw_graph_algorithms algo;
-	private static MyFrame _win2;
-	private static Image image;
-	
+	private static BackgroundImageJFrame frame ;
+	private final static AtomicBoolean run = new AtomicBoolean(false);
+
 
 
 	public BackgroundImageJFrame(File imageFile)
 	{
 		setLayout(new BorderLayout());
-		JLabel background=new JLabel(new ImageIcon(imageFile.getAbsolutePath()));
+		 background=new JLabel(new ImageIcon(imageFile.getAbsolutePath()));
 		add(background);
 		background.setLayout(new FlowLayout());
-		l1=new JLabel("Here is a button");
+		l1=new JLabel("start a new game");
 		b1=new JButton("start game");
 		b1.addActionListener(new ActionListener() {
 
@@ -49,6 +46,7 @@ public class BackgroundImageJFrame extends JFrame
 				loginPanel();				
 			}
 		});
+		b1.setSize(100, 100);
 		background.add(l1);
 		background.add(b1);
 
@@ -58,14 +56,20 @@ public class BackgroundImageJFrame extends JFrame
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
 		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
 	}
+
+	   private void handleClosing() {
+	        
+	            dispose();
+	        }      
 	public static void loginPanel(){
-		JPanel panel = new JPanel();
-		JFrame login = new JFrame();
+		
+		 panel = new JPanel();
+		 login = new JFrame();
 		login.setSize(330,160);
 		panel.setLayout(null);
 		// login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		login.add(panel);
-		JLabel user = new JLabel("User:");
+		 user = new JLabel("User:");
 		user.setBounds(10,20,80,25);
 
 		JLabel scene = new JLabel("Scenario:");
@@ -84,12 +88,14 @@ public class BackgroundImageJFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-
+			            int scenario = _sceneNum.getSelectedIndex();
+			            _scenario = scenario;
+			
 			}
+			
 
 		});
+	
 	
 
 		Quit = new JButton("quit");
@@ -116,11 +122,13 @@ public class BackgroundImageJFrame extends JFrame
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				frame.dispose();
+				login.dispose();
+				new Ex2();
 				
 			}
+			
          });
-
 
 		panel.add(user);
 		panel.add(scene);
@@ -129,9 +137,13 @@ public class BackgroundImageJFrame extends JFrame
 		panel.add(Quit);
 		panel.add(_loginButton);
 		login.setVisible(true);
+		login.setTitle("login");
+		login.setLocationRelativeTo(null); // center this window on the screen
+		login.setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
+	
 	}
 
-
+	    
 
 
 	public static void main(String args[])
@@ -149,8 +161,9 @@ public class BackgroundImageJFrame extends JFrame
 				if (folderInput != null) {
 
 
-					BackgroundImageJFrame frame = new BackgroundImageJFrame(folderInput);
+					frame = new BackgroundImageJFrame(folderInput);
 					frame.setVisible(true); // call setVisible(true) last of all
+					
 				}
 			}
 		});

@@ -6,6 +6,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.JFrame;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import Server.Game_Server_Ex2;
@@ -39,34 +42,60 @@ public class Pokemon_Game implements Runnable {
 	private static HashMap<Integer,List<node_data>> AgentPath; 
 	// This HashMap Keeps the agent's ID inside a key and the value of that agent will be the Pokemon that agent looking for.
 	private static HashMap<Integer,CL_Pokemon> PokemonToAgent; 
-
-
+	private static int scenaio;
+	private static MyFrame _win;
+	
 	public Pokemon_Game() {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
 		AgentPath=new HashMap<Integer,List<node_data>>();
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
+		this.scenaio=0;
+		run();
+		
+		
 	}
-
+	public Pokemon_Game(int scenaio) {
+		_Arena=new Arena();
+		algo= new DWGraph_AlgoGW();
+		AgentPath=new HashMap<Integer,List<node_data>>();
+		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
+		timeToSlip=0;	
+		this.scenaio=scenaio;
+		run();
+		
+		
+	}
 	@Override
 	public void  run() {
-		int scenario_num = 23;
-		game_service game= Game_Server_Ex2.getServer(scenario_num);		
+		
+		game_service game= Game_Server_Ex2.getServer(this.scenaio);		
 		game.login(311450068);
 
 		//make json file and load it from file 
 		reade_data(game.getGraph(),"graph_game");
 		//This function allows you to put the Pokemon on the graph and in addition place the agents on the graph.
 		PutOnBoard(game);
+		_win = new MyFrame("test Ex2");
+		_win.setSize(1000, 700);
+		_win.update(_Arena);
+		
+		_win.show();
 
 		game.startGame();
+		_win.setTitle("Pokemon");
+		_win.setVisible(true);
 
+		_win.setLocationRelativeTo(null); // center this window on the screen
+		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // when this window is closed, exit this application
+	
 		play(game);
 
 
 		System.out.println(game.toString());
 		System.exit(0);
+		
 
 	}
 	/**
@@ -76,9 +105,12 @@ public class Pokemon_Game implements Runnable {
 	 */
 	private static void play(game_service game) {
 		while(game.isRunning()) {
+			int ind=10;
 			moveAgants(game);
+			if(ind%1==0) {_win.repaint();}
 			try {
 				Thread.sleep(timeToSlip);
+				ind++;
 			}
 			catch(Exception e) {
 				e.printStackTrace();
