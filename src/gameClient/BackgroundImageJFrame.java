@@ -14,7 +14,7 @@ public class BackgroundImageJFrame extends JFrame
 	// instance variables should really be private to keep code in other classes from messing them up.
 	private JButton b1;
 	private JLabel l1;
-	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+	static File folderInput = new File("src\\images\\winningImage.png");
 	private static int _scenario = 0;
 	private static int _id = -1;
 	private static JComboBox _sceneNum;
@@ -26,9 +26,8 @@ public class BackgroundImageJFrame extends JFrame
 	private static JLabel scene;
 	private static JPanel panel;
 	private static JFrame login;
-	private static BackgroundImageJFrame frame ;
-	private final static AtomicBoolean run = new AtomicBoolean(false);
-
+	
+	private static File folderInpu2t = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\bulbasaurFront.png");
 
 
 	public BackgroundImageJFrame(File imageFile)

@@ -6,9 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +18,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import api.directed_weighted_graph;
@@ -39,16 +35,28 @@ public class GUI extends JFrame{
 	private Arena _ar;
 	private gameClient.util.Range2Range _w2f;
 
-    private BufferedImage img;
+
+    private BufferedImage map;
+    private BufferedImage balbazurimg;
+    private BufferedImage charmanderimg;
+    private BufferedImage squiltelimg;
+    private BufferedImage hash;
 	private static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\pokemonBattleFieldTesting.png");
-	
+	private static File balbazur = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\bulbasaurFront.png");
+	private static File charmander = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\charmanderFront.png");
+	private static File squiltel = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\squirtleFront.png");
+	private static File has = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\pokeballImage.png");
     protected JFrame mainWindow;
-    
+
 
 	public GUI()
 	{
 		try {
-			img = ImageIO.read(folderInput);
+			map = ImageIO.read(folderInput);
+			balbazurimg= ImageIO.read(balbazur);
+			charmanderimg= ImageIO.read(charmander);
+			squiltelimg= ImageIO.read(squiltel);
+			hash= ImageIO.read(has);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -75,11 +83,10 @@ public class GUI extends JFrame{
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
-		background.setVisible(true);
 	}
 	
 	public Dimension getPreferredSize() {
-		return img == null ? new Dimension(200, 200) : new Dimension(img.getWidth(), img.getHeight());
+		return map == null ? new Dimension(200, 200) : new Dimension(map.getWidth(), map.getHeight());
 	}
 	
 	private void updateFrame() {
@@ -92,22 +99,19 @@ public class GUI extends JFrame{
 		
 	}
 	public void paint(Graphics g) {
-		int w = this.getWidth();
-		int h = this.getHeight();
-		
-	//	updateFrame();
+		updateFrame();
 		drawPokemons(g);
 		drawGraph(g);
 		drawAgants(g);
 		drawInfo(g);
 		super.paintComponents(g);
-		if (img != null) {
+		if (map != null) {
 			Graphics2D g2d = (Graphics2D) g.create();
 
-			int x = (getWidth() - img.getWidth()) / 2;
-			int y = (getHeight() - img.getHeight()) / 2;
+			int x = (getWidth() - map.getWidth()) / 2;
+			int y = (getHeight() - map.getHeight()) / 2;
 
-			g2d.drawImage(img, x, y, this);
+			g2d.drawImage(map, x, y, this);
 			g2d.dispose();
 		}
 		
@@ -125,8 +129,8 @@ public class GUI extends JFrame{
 		Iterator<node_data> iter = gg.getV().iterator();
 		while(iter.hasNext()) {
 			node_data n = iter.next();
-			g.setColor(Color.blue);
-			drawNode(n,5,g);
+//			g.setColor(Color.blue);
+//			drawNode(n,5,g);
 			Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
 			while(itr.hasNext()) {
 				edge_data e = itr.next();
@@ -137,6 +141,7 @@ public class GUI extends JFrame{
 		
 	}
 	private void drawPokemons(Graphics g) {
+	
 		List<CL_Pokemon> fs = _ar.getPokemons();
 		if(fs!=null) {
 		Iterator<CL_Pokemon> itr = fs.iterator();
@@ -146,12 +151,21 @@ public class GUI extends JFrame{
 			CL_Pokemon f = itr.next();
 			Point3D c = f.getLocation();
 			int r=17;
-			g.setColor(Color.green);
-			if(f.getType()<0) {g.setColor(Color.orange);}
+			super.paintComponents(g);
+			Graphics2D g2d = (Graphics2D) g.create();
+			g2d.drawImage(charmanderimg,(int)c.x()-r, (int)c.y()-r, this);
+			if(f.getType()<0) {g2d.drawImage(squiltelimg,(int)c.x()-r, (int)c.y()-r, this);}
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
-				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+				super.paintComponents(g);
+				if (balbazurimg != null) {
+					
+//					
+					g2d.drawImage(balbazurimg,(int)fp.x()-r, (int)fp.y()-r, this);
+					g2d.dispose();
+				}
+//				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
 				
 			}
@@ -161,7 +175,8 @@ public class GUI extends JFrame{
 	private void drawAgants(Graphics g) {
 		List<CL_Agent> rs = _ar.getAgents();
 	//	Iterator<OOP_Point3D> itr = rs.iterator();
-		g.setColor(Color.red);
+		Graphics2D g2d = (Graphics2D) g.create();
+		
 		int i=0;
 		while(rs!=null && i<rs.size()) {
 			geo_location c = rs.get(i).getLocation();
@@ -170,7 +185,8 @@ public class GUI extends JFrame{
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
-				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+				g2d.drawImage(hash,(int)fp.x()-r, (int)fp.y()-r, this);
+//				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			}
 		}
 	}

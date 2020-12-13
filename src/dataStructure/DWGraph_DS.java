@@ -180,8 +180,6 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 		if(_nodeData.containsKey(key)) {
 			//if node(key) have neighbors.
 			node_data removeNode=_nodeData.get(key);
-			//			if(_edgeData.containsKey(_nodeData.get(key))) {
-			//System.out.println("innn");
 			for(node_data n: getV()) {
 				if(_edgeData.containsKey(n)&&_edgeData.get(n).containsKey(_nodeData.get(key))) {		
 					_edgeData.get(n).remove(_nodeData.get(key));
@@ -189,7 +187,6 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 					modeCount++;
 				}
 			}
-			//			}
 			sizeOfEdge=sizeOfEdge-_edgeData.get(_nodeData.get(key)).size();
 			modeCount=modeCount+_edgeData.get(_nodeData.get(key)).size();
 			_edgeData.remove(_nodeData.get(key));

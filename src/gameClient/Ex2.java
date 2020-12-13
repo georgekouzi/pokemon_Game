@@ -10,7 +10,7 @@ public class Ex2 {
 	//When the game is over we want all the actions
 	//That facts in parallel will also over.
 	private final static AtomicBoolean run = new AtomicBoolean(false);
-	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+	static File folderInput = new File("src\\images\\winningImage.png");
 
 	public Ex2(){
 		BackgroundImageJFrame j = new BackgroundImageJFrame(folderInput);

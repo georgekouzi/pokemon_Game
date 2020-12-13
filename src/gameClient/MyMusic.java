@@ -6,10 +6,6 @@ import javazoom.jl.player.Player;
 
 public class MyMusic implements Runnable{
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 	String pa;
 	public MyMusic(String p) {
 		pa=p;
