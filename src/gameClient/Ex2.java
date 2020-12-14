@@ -25,9 +25,9 @@ public class Ex2 {
 			run.set(false);	
 		
 	}
-	public Ex2(int scenario){
+	public Ex2(int scenario,long id){
 		
-		Thread client = new Thread(new Pokemon_Game());
+		Thread client = new Thread(new Pokemon_Game(scenario,id));
 		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
 		Music.start();
 		client.start();
@@ -36,7 +36,6 @@ public class Ex2 {
 			run.set(false);	
 	}
 	
-
 	public static void main(String args[])
 	{
 		Ex2 a = new Ex2();

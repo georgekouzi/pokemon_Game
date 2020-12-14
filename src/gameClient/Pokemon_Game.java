@@ -46,7 +46,7 @@ public class Pokemon_Game implements Runnable {
 	private static int scenaio;
 	private static GUI _win;
 	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
-	
+	long _id;
 	public Pokemon_Game() {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
@@ -54,17 +54,18 @@ public class Pokemon_Game implements Runnable {
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
 		this.scenaio=0;
-	
+	_id=0;
 		
 		
 	}
-	public Pokemon_Game(int scenaio) {
+	public Pokemon_Game(int scenaio,long id) {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
 		AgentPath=new HashMap<Integer,List<node_data>>();
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
 		this.scenaio=scenaio;
+		_id=id;
 		
 		
 	}
@@ -75,7 +76,7 @@ public class Pokemon_Game implements Runnable {
 		//		game.login(311450068);
 		
 		game_service game= Game_Server_Ex2.getServer(this.scenaio);		
-		game.login(311450068);
+		game.login(_id);
 
 		//make json file and load it from file 
 		reade_data(game.getGraph(),"graph_game");
@@ -105,17 +106,15 @@ public class Pokemon_Game implements Runnable {
 		while(game.isRunning()) {
 			int ind=10;
 			moveAgants(game);
-			if(ind%timeToSlip==0) {_win.repaint();}
+			if(ind%1==0) {_win.refresh();}
 			try {
 				Thread.sleep(timeToSlip);
 				ind++;
 			}
 			catch(Exception e) {
 				e.printStackTrace();
-			}
-
+			}			
 		}
-
 	}
 	/**
 	 * This function allows us to write a Json file indicating the graph of the given game service 

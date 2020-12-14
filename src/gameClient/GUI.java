@@ -6,7 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,8 @@ public class GUI extends JFrame{
 	private static File squiltel = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\squirtleFront.png");
 	private static File has = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\pokeballImage.png");
     protected JFrame mainWindow;
+    public static GraphicsDevice device = GraphicsEnvironment
+            .getLocalGraphicsEnvironment().getScreenDevices()[0];
 
 
 	public GUI()
@@ -67,7 +70,7 @@ public class GUI extends JFrame{
 		background.setLayout(new FlowLayout());
 		background.setVisible(true);
 		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
-	
+		 device.setFullScreenWindow(this);
 		setTitle("Pokemon");
 		pack(); // automatically size the window to fit its components
 		setLocationRelativeTo(null); // center this window on the screen
@@ -93,10 +96,9 @@ public class GUI extends JFrame{
 		Range rx = new Range(20,this.getWidth()-20);
 		Range ry = new Range(this.getHeight()-10,150);
 		Range2D frame = new Range2D(rx,ry);
-		directed_weighted_graph g = _ar.getGraph();
-		_w2f = Arena.w2f(g,frame);
 		
-		
+			directed_weighted_graph g =_ar.getGraph(); 
+			_w2f = Arena.w2f(g,frame);
 	}
 	public void paint(Graphics g) {
 		updateFrame();
@@ -113,8 +115,16 @@ public class GUI extends JFrame{
 
 			g2d.drawImage(map, x, y, this);
 			g2d.dispose();
+			
 		}
 		
+		
+	}
+	public void refresh() {
+		drawPokemons(this.getGraphics());
+//		drawGraph(this.getGraphics());
+		drawAgants(this.getGraphics());
+		drawInfo(this.getGraphics());
 	}
 	private void drawInfo(Graphics g) {
 		List<String> str = _ar.get_info();
@@ -153,8 +163,8 @@ public class GUI extends JFrame{
 			int r=17;
 			super.paintComponents(g);
 			Graphics2D g2d = (Graphics2D) g.create();
-			g2d.drawImage(charmanderimg,(int)c.x()-r, (int)c.y()-r, this);
-			if(f.getType()<0) {g2d.drawImage(squiltelimg,(int)c.x()-r, (int)c.y()-r, this);}
+			
+			if(f.getType()<0) {g2d.drawImage(squiltelimg,(int)c.x(), (int)c.y(), this);}
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
@@ -162,8 +172,10 @@ public class GUI extends JFrame{
 				if (balbazurimg != null) {
 					
 //					
-					g2d.drawImage(balbazurimg,(int)fp.x()-r, (int)fp.y()-r, this);
+					g2d.drawImage(balbazurimg,(int)fp.x(), (int)fp.y(), this);
 					g2d.dispose();
+				}else {
+					g2d.drawImage(charmanderimg,(int)c.x(), (int)c.y(), this);
 				}
 //				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
@@ -180,22 +192,23 @@ public class GUI extends JFrame{
 		int i=0;
 		while(rs!=null && i<rs.size()) {
 			geo_location c = rs.get(i).getLocation();
-			int r=8;
+			int r=20;;
 			i++;
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
-				g2d.drawImage(hash,(int)fp.x()-r, (int)fp.y()-r, this);
+				g2d.drawImage(hash,(int)fp.x(), (int)fp.y(),  80, 80, null);
+				
 //				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			}
 		}
 	}
-	private void drawNode(node_data n, int r, Graphics g) {
-		geo_location pos = n.getLocation();
-		geo_location fp = this._w2f.world2frame(pos);
-		g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
-		g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
-	}
+//	private void drawNode(node_data n, int r, Graphics g) {
+//		geo_location pos = n.getLocation();
+//		geo_location fp = this._w2f.world2frame(pos);
+//		g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+//		g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
+//	}
 	private void drawEdge(edge_data e, Graphics g) {
 		directed_weighted_graph gg = _ar.getGraph();
 		geo_location s = gg.getNode(e.getSrc()).getLocation();

@@ -4,6 +4,7 @@ import api.directed_weighted_graph;
 import api.edge_data;
 import api.geo_location;
 import api.node_data;
+import dataStructure.DWGraph_DS;
 import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
@@ -11,6 +12,8 @@ import gameClient.util.Range2Range;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import algorithms.DWGraph_AlgoGW;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +34,9 @@ public class Arena {
 	private static Point3D MAX = new Point3D(0, 100,0);
 
 	public Arena() {;
-		_info = new ArrayList<String>();
+	_info = new ArrayList<String>();
+	_gg = new DWGraph_DS();
+	
 	}
 	private Arena(directed_weighted_graph g, List<CL_Agent> r, List<CL_Pokemon> p) {
 		_gg = g;
@@ -60,12 +65,12 @@ public class Arena {
 		double dx = x1-x0, dy = y1-y0;
 		MIN = new Point3D(x0-dx/10,y0-dy/10);
 		MAX = new Point3D(x1+dx/10,y1+dy/10);
-		
+
 	}
 	public List<CL_Agent> getAgents() {return _agents;}
 	public List<CL_Pokemon> getPokemons() {return _pokemons;}
 
-	
+
 	public directed_weighted_graph getGraph() {
 		return _gg;
 	}
