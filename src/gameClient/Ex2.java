@@ -40,4 +40,5 @@ public class Ex2 {
 	{
 		Ex2 a = new Ex2();
 	}
+	
 }

@@ -32,7 +32,7 @@ public class BackgroundImageJFrame extends JFrame
 
 	public BackgroundImageJFrame(File imageFile)
 	{
-		setLayout(new BorderLayout());
+		
 		background=new JLabel(new ImageIcon(imageFile.getAbsolutePath()));
 		add(background);
 		background.setLayout(new FlowLayout());
@@ -150,18 +150,29 @@ public class BackgroundImageJFrame extends JFrame
 
 	public static void main(String args[])
 	{
-	
+		/**
+		 * You really need to get in the habit of creating GUI objects in the following way, as recommended by Oracle
+		 * @see http://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
+		 */
+		// 
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+
+				//				File imageFile = MyFileChooser.chooseFile("Image Files (png & jpg)", "png", "jpg");
+				if (folderInput != null) {
 
 
 					BackgroundImageJFrame frame = new BackgroundImageJFrame(folderInput);
 					frame.setVisible(true); // call setVisible(true) last of all
 
 				}
-			
-		
+			}
+		});
+
 
 	}
-
+}
 
 
 
