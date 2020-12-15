@@ -26,9 +26,9 @@ public class BackgroundImageJFrame extends JFrame
 	private static JLabel scene;
 	private static JPanel panel;
 	private static JFrame login;
-	private static BackgroundImageJFrame frame ;
 	private final static AtomicBoolean run = new AtomicBoolean(false);
 
+	private static File folderInpu2t = new File("src\\images\\bulbasaurFront.png");
 
 
 	public BackgroundImageJFrame(File imageFile)
@@ -120,16 +120,15 @@ public class BackgroundImageJFrame extends JFrame
 				if(id > 0){
 					_id = id;
 				}
-			
-				Thread client = new Thread(new Pokemon_Game(_scenario));
-			
-				client.start();
+				Thread client = new Thread(new Pokemon_Game());
 				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
 				Music.start();
-
-				if(!client.isAlive())
-
+				client.start();
+				
+				if(!client.isAlive()) 
 					run.set(false);	
+						 
+
 			}
 
 		});
@@ -144,32 +143,6 @@ public class BackgroundImageJFrame extends JFrame
 		login.setTitle("login");
 		login.setLocationRelativeTo(null); // center this window on the screen
 		login.setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
-
-	}
-
-
-	public static void main(String args[])
-	{
-		/**
-		 * You really need to get in the habit of creating GUI objects in the following way, as recommended by Oracle
-		 * @see http://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
-		 */
-		// 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-
-				//				File imageFile = MyFileChooser.chooseFile("Image Files (png & jpg)", "png", "jpg");
-				if (folderInput != null) {
-
-
-					BackgroundImageJFrame frame = new BackgroundImageJFrame(folderInput);
-					frame.setVisible(true); // call setVisible(true) last of all
-
-				}
-			}
-		});
-
 
 	}
 }

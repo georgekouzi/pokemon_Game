@@ -2,20 +2,22 @@ package gameClient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Graphics2D;
+
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import api.directed_weighted_graph;
@@ -32,11 +34,32 @@ public class GUI extends JFrame{
 	private int _ind;
 	private Arena _ar;
 	private gameClient.util.Range2Range _w2f;
-	static File folderInput = new File("src\\images\\pokemonBattleFieldTesting.png");
+
+
+    private BufferedImage map;
+    private BufferedImage balbazurimg;
+    private BufferedImage charmanderimg;
+    private BufferedImage squiltelimg;
+    private BufferedImage hash;
+	private static File folderInput = new File("src\\images\\pokemonBattleFieldTesting.png");
+	private static File balbazur = new File("src\\images\\bulbasaurFront.png");
+	private static File charmander = new File("src\\images\\charmanderFront.png");
+	private static File squiltel = new File("src\\images\\squirtleFront.png");
+	private static File has = new File("src\\images\\pokeballImage.png");
+    protected JFrame mainWindow;
+
 
 	public GUI()
 	{
-
+		try {
+			map = ImageIO.read(folderInput);
+			balbazurimg= ImageIO.read(balbazur);
+			charmanderimg= ImageIO.read(charmander);
+			squiltelimg= ImageIO.read(squiltel);
+			hash= ImageIO.read(has);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 		 _ind = 0;
 		setLayout(new BorderLayout());
 		 background=new JLabel(new ImageIcon(folderInput.getAbsolutePath()));
@@ -44,24 +67,28 @@ public class GUI extends JFrame{
 		background.setLayout(new FlowLayout());
 		background.setVisible(true);
 		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
-
+	
 		setTitle("Pokemon");
 		pack(); // automatically size the window to fit its components
 		setLocationRelativeTo(null); // center this window on the screen
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
+
 	}
 	
 	GUI(String a) {
 		super(a);
 		 _ind = 0;
-		
+			setSize(1500, 3000);
 	}
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
-		background.setVisible(true);
 	}
-
+	
+	public Dimension getPreferredSize() {
+		return map == null ? new Dimension(200, 200) : new Dimension(map.getWidth(), map.getHeight());
+	}
+	
 	private void updateFrame() {
 		Range rx = new Range(20,this.getWidth()-20);
 		Range ry = new Range(this.getHeight()-10,150);
@@ -72,15 +99,21 @@ public class GUI extends JFrame{
 		
 	}
 	public void paint(Graphics g) {
-		int w = this.getWidth();
-		int h = this.getHeight();
-		g.clearRect(0, 0, w, h);
-	//	updateFrame();
+		updateFrame();
 		drawPokemons(g);
 		drawGraph(g);
 		drawAgants(g);
 		drawInfo(g);
-		background.setVisible(true);
+		super.paintComponents(g);
+		if (map != null) {
+			Graphics2D g2d = (Graphics2D) g.create();
+
+			int x = (getWidth() - map.getWidth()) / 2;
+			int y = (getHeight() - map.getHeight()) / 2;
+
+			g2d.drawImage(map, x, y, this);
+			g2d.dispose();
+		}
 		
 	}
 	private void drawInfo(Graphics g) {
@@ -96,8 +129,8 @@ public class GUI extends JFrame{
 		Iterator<node_data> iter = gg.getV().iterator();
 		while(iter.hasNext()) {
 			node_data n = iter.next();
-			g.setColor(Color.blue);
-			drawNode(n,5,g);
+//			g.setColor(Color.blue);
+//			drawNode(n,5,g);
 			Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
 			while(itr.hasNext()) {
 				edge_data e = itr.next();
@@ -105,8 +138,10 @@ public class GUI extends JFrame{
 				drawEdge(e, g);
 			}
 		}
+		
 	}
 	private void drawPokemons(Graphics g) {
+	
 		List<CL_Pokemon> fs = _ar.getPokemons();
 		if(fs!=null) {
 		Iterator<CL_Pokemon> itr = fs.iterator();
@@ -115,13 +150,22 @@ public class GUI extends JFrame{
 			
 			CL_Pokemon f = itr.next();
 			Point3D c = f.getLocation();
-			int r=10;
-			g.setColor(Color.green);
-			if(f.getType()<0) {g.setColor(Color.orange);}
+			int r=17;
+			super.paintComponents(g);
+			Graphics2D g2d = (Graphics2D) g.create();
+			g2d.drawImage(charmanderimg,(int)c.x()-r, (int)c.y()-r, this);
+			if(f.getType()<0) {g2d.drawImage(squiltelimg,(int)c.x()-r, (int)c.y()-r, this);}
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
-				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+				super.paintComponents(g);
+				if (balbazurimg != null) {
+					
+//					
+					g2d.drawImage(balbazurimg,(int)fp.x()-r, (int)fp.y()-r, this);
+					g2d.dispose();
+				}
+//				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
 				
 			}
@@ -131,7 +175,8 @@ public class GUI extends JFrame{
 	private void drawAgants(Graphics g) {
 		List<CL_Agent> rs = _ar.getAgents();
 	//	Iterator<OOP_Point3D> itr = rs.iterator();
-		g.setColor(Color.red);
+		Graphics2D g2d = (Graphics2D) g.create();
+		
 		int i=0;
 		while(rs!=null && i<rs.size()) {
 			geo_location c = rs.get(i).getLocation();
@@ -140,7 +185,8 @@ public class GUI extends JFrame{
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
-				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+				g2d.drawImage(hash,(int)fp.x()-r, (int)fp.y()-r, this);
+//				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			}
 		}
 	}
