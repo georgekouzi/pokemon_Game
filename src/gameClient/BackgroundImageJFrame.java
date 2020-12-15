@@ -78,7 +78,7 @@ public class BackgroundImageJFrame extends JFrame
 		for(int i = 0; i < 24; i++){
 			scenes[i] = String.valueOf(i);
 		}
-		_sceneNum = new JComboBox(scenes);
+
 		_sceneNum.setBounds(100,50,165,25);
 		_sceneNum.addActionListener(new ActionListener() {
 

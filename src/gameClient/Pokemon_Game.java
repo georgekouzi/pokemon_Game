@@ -75,7 +75,7 @@ public class Pokemon_Game implements Runnable {
 //		game_service game= Game_Server_Ex2.getServer(scenario_num);		
 		//		game.login(311450068);
 		
-		game_service game= Game_Server_Ex2.getServer(this.scenaio);		
+		game_service game= Game_Server_Ex2.getServer(11);		
 		game.login(_id);
 
 		//make json file and load it from file 
@@ -87,7 +87,7 @@ public class Pokemon_Game implements Runnable {
 		_win.show();
 
 		game.startGame();
-		_win.setTitle("Pokemon");
+		
 		
 		play(game);
 
@@ -105,11 +105,12 @@ public class Pokemon_Game implements Runnable {
 	private static void play(game_service game) {
 		while(game.isRunning()) {
 			int ind=10;
-			moveAgants(game);
-			if(ind%1==0) {_win.refresh();}
+		
+			if(ind%1==0) {_win.repaint();}
 			try {
-				Thread.sleep(timeToSlip);
+				Thread.sleep(timeToSlip+1000);
 				ind++;
+				moveAgants(game);
 			}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -259,7 +260,7 @@ public class Pokemon_Game implements Runnable {
 		_win.setSize(1000, 700);
 		_win.update(_Arena);
 		_win.setVisible(true);
-		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		
 		
 	}
