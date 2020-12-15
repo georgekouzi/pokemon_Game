@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
@@ -76,11 +76,11 @@ public class GUI extends JFrame{
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 
-				
-				g.drawImage(map, 0, 0, null);
-//				drawInfo(g);
-				drawGraph(g);
-				
+
+				//				g.drawImage(map, 0, 0, null);
+				////				drawInfo(g);
+				//				drawGraph(g);
+
 
 				g.drawImage(map, 0, 0, null);
 				drawGraph(g);
@@ -119,35 +119,35 @@ public class GUI extends JFrame{
 		directed_weighted_graph g =_ar.getGraph(); 
 		_w2f = Arena.w2f(g,frame);
 	}
-	
+
 	public void paint(Graphics g) {
-	
-	    Graphics2D g2 = (Graphics2D) g.create();
-	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-	    super.paint(g2); 
+
+		Graphics2D g2 = (Graphics2D) g.create();
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
+		super.paint(g2); 
 
 		drawPokemons(g);
 
 
 		drawAgants(g);
-	
-	    g.dispose();
-	    g2.dispose();
+
+		g.dispose();
+		g2.dispose();
 	}
 
 
-//	private void drawInfo(Graphics g) {
-//		List<String> str = _ar.get_info();
-//		String dt = "none";
-//		for(int i=0;i<str.size();i++) {
-//			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
-//		}
-//	}
+	//	private void drawInfo(Graphics g) {
+	//		List<String> str = _ar.get_info();
+	//		String dt = "none";
+	//		for(int i=0;i<str.size();i++) {
+	//			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
+	//		}
+	//	}
 
-//		drawGraph(g);
+	//		drawGraph(g);
 
-//		drawInfo(g);
-	
+	//		drawInfo(g);
+
 
 	private void drawInfo(Graphics g) {
 		List<String> str = _ar.get_info();
@@ -157,53 +157,34 @@ public class GUI extends JFrame{
 		}
 	}
 
-//
-//	private void drawPokemons(Graphics g) {
-//		List<CL_Pokemon> fs = _ar.getPokemons();
-//		if(fs!=null) {
-//			Iterator<CL_Pokemon> itr = fs.iterator();
-//
-//			while(itr.hasNext()) {
-//
-//				CL_Pokemon f = itr.next();
-//				Point3D c = f.getLocation();
-//				super.paintComponents(g);
-//				Graphics2D g2d = (Graphics2D) g.create();
-//				if(c!=null) {
-//					geo_location fp = this._w2f.world2frame(c);
-//					super.paintComponents(g);
-//					if (balbazurimg != null) {
-//
-//						g2d.drawImage(balbazurimg,(int)fp.x(), (int)fp.y(), this);
-//
-//						g2d.dispose();
+	
+	private  void drawPokemons(Graphics g) {
+		List<CL_Pokemon> fs = _ar.getPokemons();
+		if(fs!=null) {
+			Iterator<CL_Pokemon> itr = fs.iterator();
+
+			while(itr.hasNext()) {
+				CL_Pokemon f = itr.next();
+				Point3D c = f.getLocation();
+				
+				if(c!=null) {
+					geo_location fp = this._w2f.world2frame(c);
+
+			
+				
+						g.drawImage(charmanderimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
+//					}
+//					else if(pokemonrandome==1) {
+//						g.drawImage(balbazurimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
 //
 //					}
-//					else {
-//						g2d.drawImage(charmanderimg,(int)c.x(), (int)c.y(), this);
-//					}
+//					else
+//						g.drawImage(squiltelimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
 //
-//				}
-//			}
-//		}
-//	}
-	 private void drawPokemons(Graphics g) {
-	        List<CL_Pokemon> fs = _ar.getPokemons();
-	        if(fs!=null) {
-	            Iterator<CL_Pokemon> itr = fs.iterator();
-	            while(itr.hasNext()) {
-	                CL_Pokemon f = itr.next();
-	                Point3D c = f.getLocation();
-	                int r=10;
-	                g.setColor(Color.green);
-	                if(f.getType()<0) {g.setColor(Color.orange);}
-	                if(c!=null) {
-	                    geo_location fp = this._w2f.world2frame(c);
-	                    g.drawImage(charmanderimg,(int)fp.x()-r, (int)fp.y()-r,100, 100, null);
-	                }
-	            }
-	        }
-	    }
+				}
+			}
+		}
+	}
 	private void drawAgants(Graphics g) {
 		List<CL_Agent> rs = _ar.getAgents();
 		//	Iterator<OOP_Point3D> itr = rs.iterator();
@@ -216,12 +197,12 @@ public class GUI extends JFrame{
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
-				g2d.drawImage(hash,(int)fp.x(), (int)fp.y(),  80, 80, null);
+				g2d.drawImage(hash,(int)fp.x()-11, (int)fp.y()-101,  40, 40, null);
 
 				//				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			}
 		}
-	
+
 	}
 	//	private void drawNode(node_data n, int r, Graphics g) {
 	//		geo_location pos = n.getLocation();
@@ -236,46 +217,45 @@ public class GUI extends JFrame{
 		geo_location s0 = this._w2f.world2frame(s);
 		geo_location d0 = this._w2f.world2frame(d);
 
+		g.setColor(Color.BLACK);
 
-//		((Graphics2D)g).drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
-	
 
-	g.setColor(Color.BLUE);
-
-//	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
-
-	g.drawLine((int)s0.x(), (int)s0.y()-100, (int)d0.x(), (int)d0.y()-100);
+		g.drawLine((int)s0.x()-10, (int)s0.y()-100, (int)d0.x()-10, (int)d0.y()-100);
+		g.drawLine((int)s0.x()-11, (int)s0.y()-101, (int)d0.x()-11, (int)d0.y()-101);
+		g.drawLine((int)s0.x()-12, (int)s0.y()-102, (int)d0.x()-12, (int)d0.y()-102);
 
 	}
 
-    private void drawGraph(Graphics g) {
-        directed_weighted_graph gg = _ar.getGraph();
-        Iterator<node_data> iter = gg.getV().iterator();
-        while(iter.hasNext()) {
-            node_data n = iter.next();
-            g.setColor(Color.blue);
-            drawNode(n,5,g);
-            Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
-            while(itr.hasNext()) {
-                edge_data e = itr.next();
-                g.setColor(Color.gray);
-                drawEdge(e, g);
-            }
-        }
-    }
-    private void drawNode(node_data n, int r, Graphics g) {
-        geo_location pos = n.getLocation();
-        geo_location fp = this._w2f.world2frame(pos);
-        g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
-        g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-100);
-    }
-//    private void drawTimer(Graphics g){
-//        g.setFont(new Font("Arial",Font.BOLD,36));
-//        int sec = (int) (_game.timeToEnd()/1000);
-//        int min = (int) (_game.timeToEnd()/60000);
-//        String time = min+":"+sec;
-//        g.drawString(time,20,70);
-//    }
+	private void drawGraph(Graphics g) {
+		directed_weighted_graph gg = _ar.getGraph();
+		Iterator<node_data> iter = gg.getV().iterator();
+		while(iter.hasNext()) {
+			node_data n = iter.next();
+			g.setColor(Color.blue);
+			drawNode(n,5,g);
+			Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
+			while(itr.hasNext()) {
+				edge_data e = itr.next();
+				g.setColor(Color.gray);
+				drawEdge(e, g);
+			}
+		}
+	}
+	private void drawNode(node_data n, int r, Graphics g) {
+		geo_location pos = n.getLocation();
+		geo_location fp = this._w2f.world2frame(pos);
+		g.setColor(Color.RED);
+		g.fillOval((int)fp.x()-10, (int)fp.y()-110, r+10, r+10);
+		g.setColor(Color.BLACK);
+		g.drawString(" "+n.getKey(), (int)fp.x(), (int)fp.y()-105);
+	}
+	//    private void drawTimer(Graphics g){
+	//        g.setFont(new Font("Arial",Font.BOLD,36));
+	//        int sec = (int) (_game.timeToEnd()/1000);
+	//        int min = (int) (_game.timeToEnd()/60000);
+	//        String time = min+":"+sec;
+	//        g.drawString(time,20,70);
+	//    }
 
 	public static void main(String args[])
 	{

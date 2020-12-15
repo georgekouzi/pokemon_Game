@@ -23,9 +23,12 @@ public class Ex2 implements Runnable  {
 		client.start();
 		Music.start();
 		if(!client.isAlive()) 
+		
 			run.set(false);	
+		
+        } 
 
-	}
+	
 	private static void StartWithManu() {
 		MainManu main =new MainManu();
 		while(!main.get_start()) {
@@ -65,10 +68,10 @@ public class Ex2 implements Runnable  {
 		
 		_win.show();
 		game.startGame();
-		int ind=10;
+		int ind=0;
 
 		while(game.isRunning()) {		
-			if(ind%10==0) {_win.repaint();}
+			if(ind%1==0) {_win.repaint();}
 
 			try {
 				Pokemon.moveAgants(game);
