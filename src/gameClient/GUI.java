@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
@@ -53,18 +53,17 @@ public class GUI extends JFrame{
 	private static File balbazur = new File("src\\images\\bulbasaurFront.png");
 	private static File charmander = new File("src\\images\\charmanderFront.png");
 	private static File squiltel = new File("src\\images\\squirtleFront.png");
-	private static File has = new File("src\\images\\ash.png");
+	private static File has = new File("src\\images\\pokeballImage.png");
 	protected JPanel mainWindow;
 	game_service game;
-	public static GraphicsDevice device = GraphicsEnvironment
-			.getLocalGraphicsEnvironment().getScreenDevices()[0];
+//	public static GraphicsDevice device = GraphicsEnvironment
+//			.getLocalGraphicsEnvironment().getScreenDevices()[0];
 
 
 	public GUI(game_service game)
 	{
 		try {
 			map = ImageIO.read(folderInput);
-		
 			balbazurimg= ImageIO.read(balbazur);
 			charmanderimg= ImageIO.read(charmander);
 			squiltelimg= ImageIO.read(squiltel);
@@ -72,60 +71,46 @@ public class GUI extends JFrame{
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		device.setFullScreenWindow(this);
-	   
-	   
+//		device.setFullScreenWindow(this);
+
+		setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+
 		this.game=game;
 		_ind = 0;
 		_ar=new Arena();
-		setLayout(new BorderLayout());
+//		setLayout(new BorderLayout());
 		mainWindow=new JPanel() {
 			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-
-<<<<<<< HEAD
-				
-				g.drawImage(map, device.getFullScreenWindow().getWidth(), device.getFullScreenWindow().getHeight(), null);
-//				drawInfo(g);
-				drawGraph(g);
-				
-=======
-
-				//				g.drawImage(map, 0, 0, null);
-				////				drawInfo(g);
-				//				drawGraph(g);
-
->>>>>>> 288c65f1d82bef3c1960c4401ff0eac0bca2eadf
-
 				g.drawImage(map, 0, 0, null);
 				drawGraph(g);
 
 			}
 		};
 		add(mainWindow);
-		mainWindow.setLayout(new FlowLayout());
-		mainWindow.setVisible(true);
-		setVisible(true); // call setVisible(true) last of all (best if done by method that created this JFrame
-		device.setFullScreenWindow(this);
+//		mainWindow.setLayout(new FlowLayout());
+//		mainWindow.setVisible(tre);
+//		setVisible(false); // call setVisible(true) last of all (best if done by method that created this JFrame
+//		device.setFullScreenWindow(this);
+		
 		setTitle("Pokemon");
-
-		pack(); // automatically size the window to fit its components
-		setLocationRelativeTo(null); // center this window on the screen
+//		getContentPane().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+//		pack(); // automatically size the window to fit its components
+//		setLocationRelativeTo(null); // center this window on the screen
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
 
 	}
 
-	GUI(String a) {
-		super(a);
-	}
+//	GUI(String a) {
+//		super(a);
+//	}
 	public void update(Arena ar) {
 		this._ar = ar;
 		updateFrame();
 	}
 
-	public Dimension getPreferredSize() {
-		return map == null ? new Dimension(200, 200) : new Dimension(map.getWidth(), map.getHeight());
-	}
+//	public Dimension getPreferredSize() {
+//		return map == null ? new Dimension(200, 200) : new Dimension(map.getWidth(), map.getHeight());
+//	}
 
 	public void updateFrame() {
 		Range rx = new Range(20,this.getWidth()-20);
@@ -136,44 +121,32 @@ public class GUI extends JFrame{
 	}
 
 	public void paint(Graphics g) {
-<<<<<<< HEAD
-		  super.paint(g); 
-	    Graphics2D g2 = (Graphics2D) g.create();
-	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-	  
-		drawPokemons(g2);
-     	drawTimer(g2);
-		drawAgents(g2);
-		drawScore(g);
-		g.dispose();
-	    g2.dispose();
-	}
-
-
-
-    private void drawScore(Graphics g){
-        List<CL_Agent> agents = _ar.getAgents();
-        double score = 0;
-        for(CL_Agent agent : agents){
-            score += agent.getValue();
-        }
-        g.drawString(String.valueOf(score), this.getWidth()-100, 70);
-    }
-    
-=======
-
+		super.paint(g); 
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-		super.paint(g2); 
 
-		drawPokemons(g);
-
-
-		drawAgants(g);
-
+		drawPokemons(g2);
+		drawTimer(g2);
+		drawAgants(g2);
+		drawScore(g2);
 		g.dispose();
 		g2.dispose();
 	}
+
+
+
+	private void drawScore(Graphics g){
+		List<CL_Agent> agents = _ar.getAgents();
+		double score = 0;
+		if(agents!=null) {
+		for(CL_Agent agent : agents){
+			score += agent.getValue();
+		}
+		g.drawString("Score: "+String.valueOf(score), this.getWidth()-200, 70);
+		}
+		}
+
+
 
 
 	//	private void drawInfo(Graphics g) {
@@ -188,42 +161,11 @@ public class GUI extends JFrame{
 
 	//		drawInfo(g);
 
->>>>>>> 288c65f1d82bef3c1960c4401ff0eac0bca2eadf
 
 
-<<<<<<< HEAD
-	 private void drawPokemons(Graphics g) {
-	        List<CL_Pokemon> fs = _ar.getPokemons();
-	        if(fs!=null) {
-	            Iterator<CL_Pokemon> itr = fs.iterator();
-	            while(itr.hasNext()) {
-	                CL_Pokemon f = itr.next();
-	                Point3D c = f.getLocation();
-	                int r=10;
-	                if(c!=null) {
-	                    geo_location fp = this._w2f.world2frame(c);
-	                    g.drawImage(charmanderimg,(int)fp.x()-r, (int)fp.y()-r,100, 100, null);
-	                }
-	            }
-	        }
-	    }
-	 private void drawAgents(Graphics g) {
-	        List<CL_Agent> rs = _ar.getAgents();
-	        g.setColor(Color.red);
-	        int i=0;
-	        while(rs!=null && i<rs.size()) {
-	            geo_location c = rs.get(i).getLocation();
-	            int r=8;
-	            i++;
-	            if(c!=null) {
-	                geo_location fp = this._w2f.world2frame(c);
-	                g.drawImage(hash,(int)fp.x()-r, (int)fp.y()-r,100, 100, null);
-	            }
-	        }
-	    }
-	
-=======
-	
+
+
+
 	private  void drawPokemons(Graphics g) {
 		List<CL_Pokemon> fs = _ar.getPokemons();
 		if(fs!=null) {
@@ -232,21 +174,18 @@ public class GUI extends JFrame{
 			while(itr.hasNext()) {
 				CL_Pokemon f = itr.next();
 				Point3D c = f.getLocation();
-				
-				if(c!=null) {
-					geo_location fp = this._w2f.world2frame(c);
+				geo_location fp = this._w2f.world2frame(c);
 
-			
-				
-						g.drawImage(charmanderimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
-//					}
-//					else if(pokemonrandome==1) {
-//						g.drawImage(balbazurimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
-//
-//					}
-//					else
-//						g.drawImage(squiltelimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
-//
+				if(fp!=null) {
+					g.drawImage(charmanderimg,(int)fp.x()-11, (int)fp.y()-121,120, 120, null);
+					//					}
+					//					else if(pokemonrandome==1) {
+					//						g.drawImage(balbazurimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
+					//
+					//					}
+					//					else
+					//						g.drawImage(squiltelimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
+					//
 				}
 			}
 		}
@@ -276,7 +215,6 @@ public class GUI extends JFrame{
 	//		g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 	//		g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
 	//	}
->>>>>>> 288c65f1d82bef3c1960c4401ff0eac0bca2eadf
 	private void drawEdge(edge_data e, Graphics g) {
 		directed_weighted_graph gg = _ar.getGraph();
 		geo_location s = gg.getNode(e.getSrc()).getLocation();
@@ -286,14 +224,7 @@ public class GUI extends JFrame{
 
 		g.setColor(Color.BLACK);
 
-<<<<<<< HEAD
-	
-
-	g.setColor(Color.BLUE);
-
-//	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
-=======
->>>>>>> 288c65f1d82bef3c1960c4401ff0eac0bca2eadf
+		//	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
 
 		g.drawLine((int)s0.x()-10, (int)s0.y()-100, (int)d0.x()-10, (int)d0.y()-100);
 		g.drawLine((int)s0.x()-11, (int)s0.y()-101, (int)d0.x()-11, (int)d0.y()-101);
@@ -301,39 +232,6 @@ public class GUI extends JFrame{
 
 	}
 
-<<<<<<< HEAD
-    private void drawGraph(Graphics g) {
-        directed_weighted_graph gg = _ar.getGraph();
-        Iterator<node_data> iter = gg.getV().iterator();
-        while(iter.hasNext()) {
-            node_data n = iter.next();
-            g.setColor(Color.blue);
-            drawNode(n,5,g);
-            Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
-            while(itr.hasNext()) {
-                edge_data e = itr.next();
-                g.setColor(Color.gray);
-                drawEdge(e, g);
-            }
-        }
-    }
-    private void drawNode(node_data n, int r, Graphics g) {
-        geo_location pos = n.getLocation();
-        geo_location fp = this._w2f.world2frame(pos);
-        g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
-        g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-100);
-    }
-    private void drawTimer(Graphics g){
-        g.setFont(new Font("Arial",Font.CENTER_BASELINE,36));
-        int sec = (int) (game.timeToEnd()/1000);
-        int min = (int) (game.timeToEnd()/60000);
-        String time = min+":"+sec;
-        g.drawString(time,20,70);
-    }
-    
-   
-		}
-=======
 	private void drawGraph(Graphics g) {
 		directed_weighted_graph gg = _ar.getGraph();
 		Iterator<node_data> iter = gg.getV().iterator();
@@ -349,6 +247,18 @@ public class GUI extends JFrame{
 			}
 		}
 	}
+
+	private void drawTimer(Graphics g){
+		g.setFont(new Font("Arial",Font.CENTER_BASELINE,36));
+		int sec = (int) (game.timeToEnd()/1000);
+		int min = (int) (game.timeToEnd()/60000);
+		String time = min+":"+sec;
+		g.drawString("Time to end: "+time,20,70);
+	}
+
+
+
+
 	private void drawNode(node_data n, int r, Graphics g) {
 		geo_location pos = n.getLocation();
 		geo_location fp = this._w2f.world2frame(pos);
@@ -365,21 +275,6 @@ public class GUI extends JFrame{
 	//        g.drawString(time,20,70);
 	//    }
 
-	public static void main(String args[])
-	{
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-
-				if (folderInput != null) {
-					GUI frame = new GUI();
-					frame.setVisible(true); // call setVisible(true) last of all
-
-				}
-			}
-		});
-	}
 
 }
->>>>>>> 288c65f1d82bef3c1960c4401ff0eac0bca2eadf
