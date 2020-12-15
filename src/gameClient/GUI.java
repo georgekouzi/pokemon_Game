@@ -9,7 +9,10 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
+<<<<<<< HEAD
 import java.awt.Toolkit;
+=======
+>>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -71,11 +74,16 @@ public class GUI extends JFrame{
 		mainWindow=new JPanel() {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
+<<<<<<< HEAD
 				
 				g.drawImage(map, 0, 0, null);
 //				drawInfo(g);
 				drawGraph(g);
 				
+=======
+				g.drawImage(map, 0, 0, null);
+				drawGraph(g);
+>>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 			}
 		};
 		add(mainWindow);
@@ -118,6 +126,7 @@ public class GUI extends JFrame{
 	    super.paint(g2); 
 
 		drawPokemons(g);
+<<<<<<< HEAD
 
 		drawAgants(g);
 	
@@ -133,6 +142,20 @@ public class GUI extends JFrame{
 //			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
 //		}
 //	}
+=======
+//		drawGraph(g);
+		drawAgants(g);
+//		drawInfo(g);
+	}
+
+	private void drawInfo(Graphics g) {
+		List<String> str = _ar.get_info();
+		String dt = "none";
+		for(int i=0;i<str.size();i++) {
+			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
+		}
+	}
+>>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 
 	private void drawGraph(Graphics g) {
 		directed_weighted_graph gg = _ar.getGraph();
@@ -164,12 +187,20 @@ public class GUI extends JFrame{
 					if (balbazurimg != null) {
 
 						g2d.drawImage(balbazurimg,(int)fp.x(), (int)fp.y(), this);
+<<<<<<< HEAD
 						
+=======
+						g2d.dispose();
+>>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 					}
 					else {
 						g2d.drawImage(charmanderimg,(int)c.x(), (int)c.y(), this);
 					}
+<<<<<<< HEAD
 				
+=======
+
+>>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 				}
 			}
 		}
@@ -205,9 +236,14 @@ public class GUI extends JFrame{
 		geo_location d = gg.getNode(e.getDest()).getLocation();
 		geo_location s0 = this._w2f.world2frame(s);
 		geo_location d0 = this._w2f.world2frame(d);
+<<<<<<< HEAD
 
 		((Graphics2D)g).drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
 	
+=======
+	g.setColor(Color.BLUE);
+	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
+>>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 	}
 
 

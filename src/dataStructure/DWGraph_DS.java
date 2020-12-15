@@ -16,18 +16,6 @@ import api.node_data;
 public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 	private static final long serialVersionUID = 1L;
-
-	public static void main(String[] args) {
-		HashMap<Integer,HashMap<Integer,Double>> _edgeData1223= new HashMap<Integer,HashMap<Integer,Double>>();;
-		_edgeData1223.put(1, new HashMap<Integer,Double>());
-		_edgeData1223.get(1).put(2, 5.6);
-
-
-		if(_edgeData1223.get(1).containsKey(2)) {
-			System.out.println("inn");
-		}
-	}
-
 	// HashMap in HashMap hold all the edges and the weights in the graph: first key node_info(src), next key node_info(dest) and the value is double (weight).
 	private HashMap<node_data,HashMap<node_data,edge_data>> _edgeData;
 	// This HashMap hold all the nodes in the graph.  
@@ -81,11 +69,6 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	 */
 	@Override
 	public void addNode(node_data n) {
-		try {
-			if(n.getKey()<0)
-				throw new Exception("The key must be positive");
-		} catch (Exception e) {e.printStackTrace(); return;	}	
-
 		if(!(_nodeData.containsKey(n.getKey()))) {
 			_nodeData.put(n.getKey(),n);		
 			modeCount++;
@@ -102,6 +85,7 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 	@Override
 	public void connect(int src, int dest, double w) {
+
 		if(src==dest) {
 			return;
 		}
@@ -122,14 +106,13 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 				_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w));
 				return;
 			}
-			else
+			else 
 				if(!_edgeData.containsKey(_nodeData.get(src)))	
 					_edgeData.put(_nodeData.get(src), new HashMap<node_data,edge_data>());
-
 			_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w) );
 			sizeOfEdge++;
 			modeCount++;
-
+			
 		}
 		else 
 			return;
