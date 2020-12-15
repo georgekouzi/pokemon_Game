@@ -193,7 +193,7 @@ public class GUI extends JFrame{
 		geo_location s0 = this._w2f.world2frame(s);
 		geo_location d0 = this._w2f.world2frame(d);
 	g.setColor(Color.BLUE);
-	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
+	g.drawLine((int)s0.x(), (int)s0.y()-100, (int)d0.x(), (int)d0.y()-100);
 	}
 
 
