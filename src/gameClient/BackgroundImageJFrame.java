@@ -28,12 +28,13 @@ public class BackgroundImageJFrame extends JFrame
 	private static JFrame login;
 	private final static AtomicBoolean run = new AtomicBoolean(false);
 
+
 	private static File folderInpu2t = new File("src\\images\\bulbasaurFront.png");
 
 
 	public BackgroundImageJFrame(File imageFile)
 	{
-		setLayout(new BorderLayout());
+		
 		background=new JLabel(new ImageIcon(imageFile.getAbsolutePath()));
 		add(background);
 		background.setLayout(new FlowLayout());
@@ -46,7 +47,7 @@ public class BackgroundImageJFrame extends JFrame
 				loginPanel();				
 			}
 		});
-		b1.setSize(100, 100);
+		b1.setSize(300, 300);
 		background.add(l1);
 		background.add(b1);
 
@@ -87,7 +88,7 @@ public class BackgroundImageJFrame extends JFrame
 			public void actionPerformed(ActionEvent e) {
 				int scenario = _sceneNum.getSelectedIndex();
 				_scenario = scenario;
-
+				
 			}
 
 
@@ -112,26 +113,26 @@ public class BackgroundImageJFrame extends JFrame
 
 		_loginButton = new JButton("Login");
 		_loginButton.setBounds(170,80,120,30);
-		_loginButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int id = Integer.parseInt(_userTxt.getText());
-				if(id > 0){
-					_id = id;
-				}
-				Thread client = new Thread(new Pokemon_Game());
-				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
-				Music.start();
-				client.start();
-				
-				if(!client.isAlive()) 
-					run.set(false);	
-						 
-
-			}
-
-		});
+//		_loginButton.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				long id = Integer.parseInt(_userTxt.getText());
+//				if(id > 0){
+//					
+//					new Ex2(_scenario,id);
+//				}
+//				Thread client = new Thread(new Pokemon_Game());
+//				Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
+//				Music.start();
+//				client.start();
+//				
+//				if(!client.isAlive()) 
+//					run.set(false);	
+//						 
+//			}
+//
+//		});
 
 		panel.add(user);
 		panel.add(scene);

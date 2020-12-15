@@ -41,55 +41,19 @@ public class Pokemon_Game {
 	// This HashMap Keeps the agent's ID inside a key and the value of that agent will be the Pokemon that agent looking for.
 	private static HashMap<Integer,CL_Pokemon> PokemonToAgent; 
 	
+//	private static int scenaio;
+//	private static GUI _win;
+//	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+//	long _id;
 	public Pokemon_Game() {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
 		AgentPath=new HashMap<Integer,List<node_data>>();
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
-	
-		
-		
-	}
-	public Pokemon_Game(int scenaio) {
-		_Arena=new Arena();
-		algo= new DWGraph_AlgoGW();
-		AgentPath=new HashMap<Integer,List<node_data>>();
-		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
-		timeToSlip=0;	
-		
-		
 	}
 	
-	/**
-	 * This function allows us to move the agents and wait until the agents reach the next node.
-	 * we use Thread with sleep function that accepts the variable - timeToSlip.  
-	 * @param game
-	 */
-//	public static void play(game_service game) {
-//		int ind=0;
-//		int time =1000/60;
-//		
-//		while(game.isRunning()) {
-//			moveAgants(game);
-//			
-//
-//			try {
-//				if(ind%1==0) {
-//				Thread.sleep(time);
-////				 _win.repaint();
-//				ind++;
-//				}
-//				
-//			}
-//
-//			catch(Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//		}
-//
-//	}
+
 	public  long getTimeToSlip() {
 		return timeToSlip;
 	}
@@ -105,7 +69,6 @@ public class Pokemon_Game {
 	public  void reade_data(String JsonGraph,String fileName) {
 		try {
 			FileWriter graph_game = new FileWriter(fileName);
-			System.out.println("inn");
 
 			graph_game.write(JsonGraph);
 			graph_game.flush();
@@ -129,7 +92,7 @@ public class Pokemon_Game {
 	 * @param game
 	 */
 
-	public  void moveAgants(game_service game) {
+	public synchronized void moveAgants(game_service game) {
 		String lg = game.move();
 		List<CL_Agent> AgentsList = Arena.getAgents(lg,algo.getGraph());
 		PokemonUpdate(game);

@@ -364,7 +364,6 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			Gson gson = build.create();			
 			FileReader reader = new FileReader(file);
 			directed_weighted_graph newg= gson.fromJson(reader, directed_weighted_graph.class) ; 
-System.out.println(newg);
 			init(newg);
 			reader.close();  
 			return true;
