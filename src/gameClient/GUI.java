@@ -1,18 +1,19 @@
 package gameClient;
+
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
-<<<<<<< HEAD
+
 import java.awt.Toolkit;
-=======
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -74,16 +75,16 @@ public class GUI extends JFrame{
 		mainWindow=new JPanel() {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
-<<<<<<< HEAD
+
 				
 				g.drawImage(map, 0, 0, null);
 //				drawInfo(g);
 				drawGraph(g);
 				
-=======
+
 				g.drawImage(map, 0, 0, null);
 				drawGraph(g);
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
+
 			}
 		};
 		add(mainWindow);
@@ -126,7 +127,7 @@ public class GUI extends JFrame{
 	    super.paint(g2); 
 
 		drawPokemons(g);
-<<<<<<< HEAD
+
 
 		drawAgants(g);
 	
@@ -142,11 +143,11 @@ public class GUI extends JFrame{
 //			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
 //		}
 //	}
-=======
+
 //		drawGraph(g);
-		drawAgants(g);
+
 //		drawInfo(g);
-	}
+	
 
 	private void drawInfo(Graphics g) {
 		List<String> str = _ar.get_info();
@@ -155,56 +156,54 @@ public class GUI extends JFrame{
 			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
 		}
 	}
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 
-	private void drawGraph(Graphics g) {
-		directed_weighted_graph gg = _ar.getGraph();
-		Iterator<node_data> iter = gg.getV().iterator();
-		while(iter.hasNext()) {
-			node_data n = iter.next();
-			Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
-			while(itr.hasNext()) {
-				edge_data e = itr.next();
-				drawEdge(e, g);
-			}
-		}
-
-	}
-	private void drawPokemons(Graphics g) {
-		List<CL_Pokemon> fs = _ar.getPokemons();
-		if(fs!=null) {
-			Iterator<CL_Pokemon> itr = fs.iterator();
-
-			while(itr.hasNext()) {
-
-				CL_Pokemon f = itr.next();
-				Point3D c = f.getLocation();
-				super.paintComponents(g);
-				Graphics2D g2d = (Graphics2D) g.create();
-				if(c!=null) {
-					geo_location fp = this._w2f.world2frame(c);
-					super.paintComponents(g);
-					if (balbazurimg != null) {
-
-						g2d.drawImage(balbazurimg,(int)fp.x(), (int)fp.y(), this);
-<<<<<<< HEAD
-						
-=======
-						g2d.dispose();
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
-					}
-					else {
-						g2d.drawImage(charmanderimg,(int)c.x(), (int)c.y(), this);
-					}
-<<<<<<< HEAD
-				
-=======
-
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
-				}
-			}
-		}
-	}
+//
+//	private void drawPokemons(Graphics g) {
+//		List<CL_Pokemon> fs = _ar.getPokemons();
+//		if(fs!=null) {
+//			Iterator<CL_Pokemon> itr = fs.iterator();
+//
+//			while(itr.hasNext()) {
+//
+//				CL_Pokemon f = itr.next();
+//				Point3D c = f.getLocation();
+//				super.paintComponents(g);
+//				Graphics2D g2d = (Graphics2D) g.create();
+//				if(c!=null) {
+//					geo_location fp = this._w2f.world2frame(c);
+//					super.paintComponents(g);
+//					if (balbazurimg != null) {
+//
+//						g2d.drawImage(balbazurimg,(int)fp.x(), (int)fp.y(), this);
+//
+//						g2d.dispose();
+//
+//					}
+//					else {
+//						g2d.drawImage(charmanderimg,(int)c.x(), (int)c.y(), this);
+//					}
+//
+//				}
+//			}
+//		}
+//	}
+	 private void drawPokemons(Graphics g) {
+	        List<CL_Pokemon> fs = _ar.getPokemons();
+	        if(fs!=null) {
+	            Iterator<CL_Pokemon> itr = fs.iterator();
+	            while(itr.hasNext()) {
+	                CL_Pokemon f = itr.next();
+	                Point3D c = f.getLocation();
+	                int r=10;
+	                g.setColor(Color.green);
+	                if(f.getType()<0) {g.setColor(Color.orange);}
+	                if(c!=null) {
+	                    geo_location fp = this._w2f.world2frame(c);
+	                    g.drawImage(charmanderimg,(int)fp.x()-r, (int)fp.y()-r,100, 100, null);
+	                }
+	            }
+	        }
+	    }
 	private void drawAgants(Graphics g) {
 		List<CL_Agent> rs = _ar.getAgents();
 		//	Iterator<OOP_Point3D> itr = rs.iterator();
@@ -236,16 +235,47 @@ public class GUI extends JFrame{
 		geo_location d = gg.getNode(e.getDest()).getLocation();
 		geo_location s0 = this._w2f.world2frame(s);
 		geo_location d0 = this._w2f.world2frame(d);
-<<<<<<< HEAD
 
-		((Graphics2D)g).drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
+
+//		((Graphics2D)g).drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
 	
-=======
+
 	g.setColor(Color.BLUE);
-	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
+
+//	g.drawLine((int)s0.x()-100, (int)s0.y()-100, (int)d0.x()-100, (int)d0.y()-100);
+
+	g.drawLine((int)s0.x(), (int)s0.y()-100, (int)d0.x(), (int)d0.y()-100);
+
 	}
 
+    private void drawGraph(Graphics g) {
+        directed_weighted_graph gg = _ar.getGraph();
+        Iterator<node_data> iter = gg.getV().iterator();
+        while(iter.hasNext()) {
+            node_data n = iter.next();
+            g.setColor(Color.blue);
+            drawNode(n,5,g);
+            Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
+            while(itr.hasNext()) {
+                edge_data e = itr.next();
+                g.setColor(Color.gray);
+                drawEdge(e, g);
+            }
+        }
+    }
+    private void drawNode(node_data n, int r, Graphics g) {
+        geo_location pos = n.getLocation();
+        geo_location fp = this._w2f.world2frame(pos);
+        g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+        g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-100);
+    }
+//    private void drawTimer(Graphics g){
+//        g.setFont(new Font("Arial",Font.BOLD,36));
+//        int sec = (int) (_game.timeToEnd()/1000);
+//        int min = (int) (_game.timeToEnd()/60000);
+//        String time = min+":"+sec;
+//        g.drawString(time,20,70);
+//    }
 
 	public static void main(String args[])
 	{

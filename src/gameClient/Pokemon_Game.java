@@ -52,67 +52,14 @@ public class Pokemon_Game {
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
 	}
-<<<<<<< HEAD
-	@Override
-	public void  run() {
-//		int scenario_num = 0;
-//		game_service game= Game_Server_Ex2.getServer(scenario_num);		
-		//		game.login(311450068);
-		
-		game_service game= Game_Server_Ex2.getServer(11);		
-		game.login(_id);
-
-		//make json file and load it from file 
-		reade_data(game.getGraph(),"graph_game");
-		//This function allows you to put the Pokemon on the graph and in addition place the agents on the graph.
-		PutOnBoard(game);
 	
-		
-		_win.show();
-
-		game.startGame();
-		
-		
-		play(game);
-
-
-		System.out.println(game.toString());
-		System.exit(0);
-		
-=======
-	
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 
 	public  long getTimeToSlip() {
 		return timeToSlip;
 	}
-<<<<<<< HEAD
-	/**
-	 * This function allows us to move the agents and wait until the agents reach the next node.
-	 * we use Thread with sleep function that accepts the variable - timeToSlip.  
-	 * @param game
-	 */
-	private static void play(game_service game) {
-		while(game.isRunning()) {
-			int ind=10;
-		
-			if(ind%1==0) {_win.repaint();}
-			try {
-				Thread.sleep(timeToSlip+1000);
-				ind++;
-				moveAgants(game);
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}			
-		}
-	}
-	/**
-=======
 	
 	
 	 /**
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 	 * This function allows us to write a Json file indicating the graph of the given game service 
 	 * and load it with the load function from the DWGraph_AlgoGW class.
 	 * @param JsonGraph
@@ -255,21 +202,12 @@ public class Pokemon_Game {
 		_Arena.setPokemons(_Pokemon_data);
 		putAgents(game);
 	
-<<<<<<< HEAD
-		_win = new GUI();
-		_win.setSize(1000, 700);
-		_win.update(_Arena);
-		_win.setVisible(true);
-
-		
-=======
 //		_win = new GUI();
 //		_win.setSize(1000, 700);
 //		_win.update(_Arena);
 //		_win.setVisible(true);
 //		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		
->>>>>>> e46658a2ec0f09026cf111fcb414f13ad16fd0f7
 		
 	}
 
