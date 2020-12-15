@@ -1,9 +1,12 @@
 package gameClient;
 
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -56,8 +59,35 @@ public LoginPanel getLoginPanel() {
 //		_QuitButton.setIcon(new ImageIcon("src\\images\\sed.jpg"));
 //		_QuitButton.setSize(1, 1);
 	}
-
-
+//	class MyButton extends JButton {
+//		
+//		    Image image;
+//		
+//		    ImageObserver imageObserver;
+//		
+//		     
+//		
+//		    MyButton(String filename) {
+//		
+//		        super();
+//		
+//		        ImageIcon icon = new ImageIcon(filename);
+//		
+//		        image = icon.getImage();
+//		
+//		        imageObserver = icon.getImageObserver();
+//		
+//		    }
+		
+//		    public void paint( Graphics g ) {
+//		
+//		        super.paint( g );
+//		
+//		        g.drawImage(image,  0 , 0 , getWidth() , getHeight() , imageObserver);
+//		
+//		    }
+//
+//	}
 	private void addButton() {
 		background1.add(_StartButton);
 //		_QuitButton.setBounds(20, 20, 20, 20);

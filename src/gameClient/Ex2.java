@@ -23,9 +23,12 @@ public class Ex2 implements Runnable  {
 		client.start();
 		Music.start();
 		if(!client.isAlive()) 
+		
 			run.set(false);	
+		
+        } 
 
-	}
+	
 	private static void StartWithManu() {
 		MainManu main =new MainManu();
 		while(!main.get_start()) {
