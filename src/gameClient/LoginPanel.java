@@ -14,11 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import gameClient.MainManu.action;
+
 
 
 public class LoginPanel {
 	private Component background;
-	private static JComboBox _sceneNum;
+	private static JComboBox  level_game;
 	private static int _scenario = 0;
 	private static long _id = -1;
 	private static JPanel panel;
@@ -29,10 +31,11 @@ public class LoginPanel {
 	private static JTextField _userTxt;
 	private static JButton Quit;
 	private static JLabel scene;
-	
+	public boolean b;
 	static File folderInput = new File("src\\images\\tieImage.jpg");
 
 	public LoginPanel(){
+		b=false;
 		panel = new JPanel();
 		login = new JFrame();
 		Error = new JFrame();
@@ -41,20 +44,29 @@ public class LoginPanel {
 		user = new JLabel("User:");
 		scene = new JLabel("Scenario:");
 		_userTxt = new JTextField(20);
-		_sceneNum = new JComboBox(getscenes());
+		level_game = new JComboBox(getscenes());
 		Quit = new JButton("quit");
 		_loginButton = new JButton("Login");
 		addpanel();
 		addlogin(login);
 		addbounds();
+
 	}
 
-
+	public boolean get_start() {
+		return b;
+	}
+	public long get_id() {
+		return _id;
+	}
+	public int get_scenario() {
+		return _scenario;
+	}
 
 
 	private void addbounds() {
 		login.setSize(330,160);
-		_sceneNum.setBounds(100,50,165,25);
+		level_game.setBounds(100,50,165,25);
 		_loginButton.setBounds(170,80,120,30);
 		Quit.setBounds(10,80,120,30);
 		_userTxt.setBounds(100,20,165,25);
@@ -63,8 +75,8 @@ public class LoginPanel {
 
 	}
 	public void Error(String error) {
-		
-	 addlogin(Error);
+
+		addlogin(Error);
 	}
 
 	private void addpanel() {
@@ -73,9 +85,13 @@ public class LoginPanel {
 		panel.add(user);
 		panel.add(scene);
 		panel.add(_userTxt);
-		panel.add(_sceneNum);
+		panel.add(level_game);
 		panel.add(Quit);
 		panel.add(_loginButton);
+		_loginButton.addActionListener(new action()); 
+		Quit.addActionListener(new action()); 
+		level_game.addActionListener(new action()); 
+
 
 		// when this window is closed, exit this application
 	}
@@ -99,6 +115,8 @@ public class LoginPanel {
 		}
 		return scenes;
 	}
+
+
 	public class action implements ActionListener{
 
 		@Override
@@ -106,23 +124,32 @@ public class LoginPanel {
 			if(button.getSource()==Quit) {
 				System.exit(0);
 			}
+
+			if(button.getSource()== level_game) {
+				int scenario =level_game.getSelectedIndex();
+				_scenario = scenario;
+			}
+
+
 			if(button.getSource()==_loginButton) {
-                long id = Integer.parseInt(_userTxt.getText());
-                if(id>0) {
-                	_id=id;
+				long id = Integer.parseInt(_userTxt.getText());
+				if(_userTxt.getText().length()==9) {
+					_id=id; 
+					b=true;
+					login.dispose();
 				}
-                else {
-					
+				else {
+
 				}
 
 			}
 
 		}
 	}
-
-	public static void main(String args[])
-	{
-		LoginPanel l =new LoginPanel();
-	}
+//
+//	public static void main(String args[])
+//	{
+//		LoginPanel l =new LoginPanel();
+//	}
 
 }

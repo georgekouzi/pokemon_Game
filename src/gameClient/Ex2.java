@@ -14,10 +14,10 @@ public class Ex2 implements Runnable  {
 	private static int scenaio;
 	private static GUI _win;
 	private static File folderInput = new File("src\\images\\winningImage.png");
-
+	private static long id;
 
 	public static void main(String args[]){
-
+		StartWithManu();
 		Thread client = new Thread(new Ex2());
 		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
 		client.start();
@@ -26,41 +26,53 @@ public class Ex2 implements Runnable  {
 			run.set(false);	
 
 	}
+	private static void StartWithManu() {
+		MainManu main =new MainManu();
+		while(!main.get_start()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		while(!main.getLoginPanel().get_start()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} 
 
+		scenaio=main.getLoginPanel().get_scenario();
+		id=main.getLoginPanel().get_id();
+	
+	}
 
 	@Override
 	public void  run() {
 
+
+		game_service game= Game_Server_Ex2.getServer(scenaio);		
+		game.login(id);
 		Pokemon_Game Pokemon =new Pokemon_Game();
-
-		int scenario_num = 0;
-		game_service game= Game_Server_Ex2.getServer(scenario_num);		
-		//		game.login(311450068);
-
-		//		game_service game= Game_Server_Ex2.getServer(this.scenaio);		
-		//		game.login(311450068);
 
 		//make json file and load it from file 
 		Pokemon.reade_data(game.getGraph(),"graph_game");
 		//This function allows you to put the Pokemon on the graph and in addition place the agents on the graph.
 		Pokemon.PutOnBoard(game);
-
-
-
-		//		_win.show();
-		System.out.println("ihh");
+		//
+		up(Pokemon.getArena());
+		
+		_win.show();
 		game.startGame();
-		////		_win.setTitle("Pokemon");
-		//		int ind=0;
-		//		int time =1000/60;
-		while(game.isRunning()) {
-			//		
+		int ind=10;
+
+		while(game.isRunning()) {		
+			if(ind%10==0) {_win.repaint();}
+
 			try {
-				//				if(ind%1==0) {}
 				Pokemon.moveAgants(game);
 				Thread.sleep(Pokemon.getTimeToSlip());
-				//				 _win.repaint();
-				//				ind++;
 
 			}
 			catch (InterruptedException e) {
@@ -69,8 +81,17 @@ public class Ex2 implements Runnable  {
 		}
 		System.out.println(game.toString());
 		System.exit(0);
-		//		
+
 	}
 
-
+	
+	public void up(Arena arena) {
+		_win = new GUI();
+		_win.setSize(1000, 700);
+		_win.update(arena);
+		_win.setVisible(true);
+		
+	}
+	
+	
 }

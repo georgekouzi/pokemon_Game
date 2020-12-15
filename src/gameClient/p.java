@@ -1,4 +1,5 @@
 package gameClient;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -7,9 +8,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JFrame;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import Server.Game_Server_Ex2;
 import algorithms.DWGraph_AlgoGW;
 import api.dw_graph_algorithms;
 import api.game_service;
@@ -29,7 +32,7 @@ import api.node_data;
  * @author George kouzy and Dolev Saadia.
  *
  */
-public class Pokemon_Game {
+public class p implements Runnable {
 	private static dw_graph_algorithms algo;
 	private static Arena _Arena;
 	//The time to wait for the agents to reach the next node
@@ -40,36 +43,90 @@ public class Pokemon_Game {
 	private static HashMap<Integer,List<node_data>> AgentPath; 
 	// This HashMap Keeps the agent's ID inside a key and the value of that agent will be the Pokemon that agent looking for.
 	private static HashMap<Integer,CL_Pokemon> PokemonToAgent; 
-	
-//	private static int scenaio;
-//	private static GUI _win;
-//	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
-//	long _id;
-	public Pokemon_Game() {
+	private static int scenaio;
+	private static GUI _win;
+	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+	long _id;
+	 
+	public p() {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
 		AgentPath=new HashMap<Integer,List<node_data>>();
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
+		this.scenaio=0;
+	_id=0;
+		
+		
 	}
-	
+	public p(int scenaio,long id) {
+		_Arena=new Arena();
+		algo= new DWGraph_AlgoGW();
+		AgentPath=new HashMap<Integer,List<node_data>>();
+		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
+		timeToSlip=0;	
+		this.scenaio=scenaio;
+		_id=id;
+		
+		
+	}
+	@Override
+	public void  run() {
+//		int scenario_num = 0;
+//		game_service game= Game_Server_Ex2.getServer(scenario_num);		
+		//		game.login(311450068);
+		
+		game_service game= Game_Server_Ex2.getServer(11);		
+		game.login(_id);
 
-	public  long getTimeToSlip() {
-		return timeToSlip;
+		//make json file and load it from file 
+		reade_data(game.getGraph(),"graph_game");
+		//This function allows you to put the Pokemon on the graph and in addition place the agents on the graph.
+		PutOnBoard(game);
+	
+		
+		_win.show();
+
+		game.startGame();
+		
+		
+		play(game);
+
+
+		System.out.println(game.toString());
+		System.exit(0);
+		
+
 	}
-	
-	
-	 /**
+	/**
+	 * This function allows us to move the agents and wait until the agents reach the next node.
+	 * we use Thread with sleep function that accepts the variable - timeToSlip.  
+	 * @param game
+	 */
+	private static void play(game_service game) {
+		while(game.isRunning()) {
+			int ind=10;
+			moveAgants(game);
+			if(ind%10==0) {_win.repaint();}
+			try {
+				Thread.sleep(timeToSlip);
+				ind++;
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}			
+		}
+	}
+	/**
 	 * This function allows us to write a Json file indicating the graph of the given game service 
 	 * and load it with the load function from the DWGraph_AlgoGW class.
 	 * @param JsonGraph
 	 * @param fileName
 	 */
 
-	public  void reade_data(String JsonGraph,String fileName) {
+	private void reade_data(String JsonGraph,String fileName) {
 		try {
 			FileWriter graph_game = new FileWriter(fileName);
-
 			graph_game.write(JsonGraph);
 			graph_game.flush();
 			graph_game.close();
@@ -78,7 +135,7 @@ public class Pokemon_Game {
 			e.printStackTrace();
 		}
 
-		algo.load(fileName);
+		algo.load("graph_game");
 
 
 	}
@@ -92,7 +149,7 @@ public class Pokemon_Game {
 	 * @param game
 	 */
 
-	public synchronized void moveAgants(game_service game) {
+	private static void moveAgants(game_service game) {
 		String lg = game.move();
 		List<CL_Agent> AgentsList = Arena.getAgents(lg,algo.getGraph());
 		PokemonUpdate(game);
@@ -120,7 +177,7 @@ public class Pokemon_Game {
 	 * @param game
 	 * @return -return the next destination.
 	 */
-	public int chooseNextNode( CL_Agent Agent,game_service game){
+	private static int chooseNextNode( CL_Agent Agent,game_service game){
 
 		if(AgentPath.containsKey(Agent.getID())) {
 			int nextDest= AgentPath.get(Agent.getID()).remove(0).getKey();
@@ -148,7 +205,7 @@ public class Pokemon_Game {
 	 * @return -return the next destination.
 	 */
 
-	public int NewPath(CL_Agent Agent) {
+	private static int NewPath(CL_Agent Agent) {
 		UntrackedPokemon();
 
 
@@ -186,9 +243,6 @@ public class Pokemon_Game {
 		return newdest;
 
 	}
-	public Arena  getArena() {
-		return _Arena;
-	}
 
 
 	/**
@@ -196,18 +250,18 @@ public class Pokemon_Game {
 	 * and places the Pokemon on the same graph and sent to the putAgents function to place the agents on the graph.
 	 * @param game
 	 */
-	public void PutOnBoard(game_service game) {	
+	private static void PutOnBoard(game_service game) {	
 		_Arena.setGraph(algo.getGraph());
 		PokemonUpdate(game);
 		_Arena.setPokemons(_Pokemon_data);
 		putAgents(game);
 	
-//		_win = new GUI();
-//		_win.setSize(1000, 700);
-//		_win.update(_Arena);
-//		_win.setVisible(true);
-//		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		
+		_win = new GUI();
+		_win.setSize(1000, 700);
+		_win.update(_Arena);
+		_win.setVisible(true);
+
+		
 		
 	}
 
@@ -215,7 +269,7 @@ public class Pokemon_Game {
 	/**
 	 * This function allows you to update the list of _Pokemon_data that no agent is yet looking for.
 	 */
-	public void UntrackedPokemon() {
+	private static void UntrackedPokemon() {
 		for(CL_Pokemon a: PokemonToAgent.values()) {
 			Iterator <CL_Pokemon>it = _Pokemon_data.iterator();
 			while(it.hasNext()) {
@@ -234,7 +288,7 @@ public class Pokemon_Game {
 	 * @param game
 	 */
 
-	public void PokemonUpdate(game_service game){
+	public static void PokemonUpdate(game_service game){
 		_Pokemon_data=Arena.json2Pokemons(game.getPokemons());;
 		Collections.sort(_Pokemon_data, new maxValue());
 		for (CL_Pokemon p: _Pokemon_data) {
@@ -248,7 +302,7 @@ public class Pokemon_Game {
 	 * we can know the number of agents by read json information of the game.
 	 * We place the agents at the node that closest to the Pokemons.
 	 */
-	public void putAgents(game_service game) {
+	private static  void putAgents(game_service game) {
 		JsonObject g =new JsonParser().parse(game.toString()).getAsJsonObject();
 		int numOfAgents=g.get("GameServer").getAsJsonObject().get("agents").getAsInt();
 
@@ -260,7 +314,7 @@ public class Pokemon_Game {
 	/**
 	 * inner class allows as to compare between two Pokemon value.
 	 */
-	public  class maxValue implements Comparator<CL_Pokemon> {
+	private static class maxValue implements Comparator<CL_Pokemon> {
 
 		@Override
 		public int compare(CL_Pokemon pokemon_1, CL_Pokemon pokemon_2) {
@@ -268,4 +322,4 @@ public class Pokemon_Game {
 		}
 
 	}
-} 
+}
