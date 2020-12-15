@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 
 import api.directed_weighted_graph;
 import api.edge_data;
+import api.game_service;
 import api.geo_location;
 import api.node_data;
 import gameClient.util.Point3D;
@@ -52,16 +53,18 @@ public class GUI extends JFrame{
 	private static File balbazur = new File("src\\images\\bulbasaurFront.png");
 	private static File charmander = new File("src\\images\\charmanderFront.png");
 	private static File squiltel = new File("src\\images\\squirtleFront.png");
-	private static File has = new File("src\\images\\pokeballImage.png");
+	private static File has = new File("src\\images\\ash.png");
 	protected JPanel mainWindow;
+	game_service game;
 	public static GraphicsDevice device = GraphicsEnvironment
 			.getLocalGraphicsEnvironment().getScreenDevices()[0];
 
 
-	public GUI()
+	public GUI(game_service game)
 	{
 		try {
 			map = ImageIO.read(folderInput);
+		
 			balbazurimg= ImageIO.read(balbazur);
 			charmanderimg= ImageIO.read(charmander);
 			squiltelimg= ImageIO.read(squiltel);
@@ -69,6 +72,10 @@ public class GUI extends JFrame{
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+		device.setFullScreenWindow(this);
+	   
+	   
+		this.game=game;
 		_ind = 0;
 		_ar=new Arena();
 		setLayout(new BorderLayout());
@@ -77,7 +84,7 @@ public class GUI extends JFrame{
 				super.paintComponent(g);
 
 				
-				g.drawImage(map, 0, 0, null);
+				g.drawImage(map, device.getFullScreenWindow().getWidth(), device.getFullScreenWindow().getHeight(), null);
 //				drawInfo(g);
 				drawGraph(g);
 				
@@ -121,72 +128,31 @@ public class GUI extends JFrame{
 	}
 	
 	public void paint(Graphics g) {
-	
+		  super.paint(g); 
 	    Graphics2D g2 = (Graphics2D) g.create();
 	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-	    super.paint(g2); 
-
-		drawPokemons(g);
-
-
-		drawAgants(g);
-	
-	    g.dispose();
+	  
+		drawPokemons(g2);
+     	drawTimer(g2);
+		drawAgents(g2);
+		drawScore(g);
+		g.dispose();
 	    g2.dispose();
 	}
 
 
-//	private void drawInfo(Graphics g) {
-//		List<String> str = _ar.get_info();
-//		String dt = "none";
-//		for(int i=0;i<str.size();i++) {
-//			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
-//		}
-//	}
 
-//		drawGraph(g);
+    private void drawScore(Graphics g){
+        List<CL_Agent> agents = _ar.getAgents();
+        double score = 0;
+        for(CL_Agent agent : agents){
+            score += agent.getValue();
+        }
+        g.drawString(String.valueOf(score), this.getWidth()-100, 70);
+    }
+    
 
-//		drawInfo(g);
-	
 
-	private void drawInfo(Graphics g) {
-		List<String> str = _ar.get_info();
-		String dt = "none";
-		for(int i=0;i<str.size();i++) {
-			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
-		}
-	}
-
-//
-//	private void drawPokemons(Graphics g) {
-//		List<CL_Pokemon> fs = _ar.getPokemons();
-//		if(fs!=null) {
-//			Iterator<CL_Pokemon> itr = fs.iterator();
-//
-//			while(itr.hasNext()) {
-//
-//				CL_Pokemon f = itr.next();
-//				Point3D c = f.getLocation();
-//				super.paintComponents(g);
-//				Graphics2D g2d = (Graphics2D) g.create();
-//				if(c!=null) {
-//					geo_location fp = this._w2f.world2frame(c);
-//					super.paintComponents(g);
-//					if (balbazurimg != null) {
-//
-//						g2d.drawImage(balbazurimg,(int)fp.x(), (int)fp.y(), this);
-//
-//						g2d.dispose();
-//
-//					}
-//					else {
-//						g2d.drawImage(charmanderimg,(int)c.x(), (int)c.y(), this);
-//					}
-//
-//				}
-//			}
-//		}
-//	}
 	 private void drawPokemons(Graphics g) {
 	        List<CL_Pokemon> fs = _ar.getPokemons();
 	        if(fs!=null) {
@@ -195,8 +161,6 @@ public class GUI extends JFrame{
 	                CL_Pokemon f = itr.next();
 	                Point3D c = f.getLocation();
 	                int r=10;
-	                g.setColor(Color.green);
-	                if(f.getType()<0) {g.setColor(Color.orange);}
 	                if(c!=null) {
 	                    geo_location fp = this._w2f.world2frame(c);
 	                    g.drawImage(charmanderimg,(int)fp.x()-r, (int)fp.y()-r,100, 100, null);
@@ -204,31 +168,21 @@ public class GUI extends JFrame{
 	            }
 	        }
 	    }
-	private void drawAgants(Graphics g) {
-		List<CL_Agent> rs = _ar.getAgents();
-		//	Iterator<OOP_Point3D> itr = rs.iterator();
-		Graphics2D g2d = (Graphics2D) g.create();
-
-		int i=0;
-		while(rs!=null && i<rs.size()) {
-			geo_location c = rs.get(i).getLocation();
-			i++;
-			if(c!=null) {
-
-				geo_location fp = this._w2f.world2frame(c);
-				g2d.drawImage(hash,(int)fp.x(), (int)fp.y(),  80, 80, null);
-
-				//				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
-			}
-		}
+	 private void drawAgents(Graphics g) {
+	        List<CL_Agent> rs = _ar.getAgents();
+	        g.setColor(Color.red);
+	        int i=0;
+	        while(rs!=null && i<rs.size()) {
+	            geo_location c = rs.get(i).getLocation();
+	            int r=8;
+	            i++;
+	            if(c!=null) {
+	                geo_location fp = this._w2f.world2frame(c);
+	                g.drawImage(hash,(int)fp.x()-r, (int)fp.y()-r,100, 100, null);
+	            }
+	        }
+	    }
 	
-	}
-	//	private void drawNode(node_data n, int r, Graphics g) {
-	//		geo_location pos = n.getLocation();
-	//		geo_location fp = this._w2f.world2frame(pos);
-	//		g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
-	//		g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
-	//	}
 	private void drawEdge(edge_data e, Graphics g) {
 		directed_weighted_graph gg = _ar.getGraph();
 		geo_location s = gg.getNode(e.getSrc()).getLocation();
@@ -237,7 +191,6 @@ public class GUI extends JFrame{
 		geo_location d0 = this._w2f.world2frame(d);
 
 
-//		((Graphics2D)g).drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
 	
 
 	g.setColor(Color.BLUE);
@@ -269,28 +222,13 @@ public class GUI extends JFrame{
         g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
         g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-100);
     }
-//    private void drawTimer(Graphics g){
-//        g.setFont(new Font("Arial",Font.BOLD,36));
-//        int sec = (int) (_game.timeToEnd()/1000);
-//        int min = (int) (_game.timeToEnd()/60000);
-//        String time = min+":"+sec;
-//        g.drawString(time,20,70);
-//    }
-
-	public static void main(String args[])
-	{
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-
-				if (folderInput != null) {
-					GUI frame = new GUI();
-					frame.setVisible(true); // call setVisible(true) last of all
-
-				}
-			}
-		});
-	}
-
-}
+    private void drawTimer(Graphics g){
+        g.setFont(new Font("Arial",Font.CENTER_BASELINE,36));
+        int sec = (int) (game.timeToEnd()/1000);
+        int min = (int) (game.timeToEnd()/60000);
+        String time = min+":"+sec;
+        g.drawString(time,20,70);
+    }
+    
+   
+		}

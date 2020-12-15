@@ -61,23 +61,25 @@ public class Ex2 implements Runnable  {
 		//This function allows you to put the Pokemon on the graph and in addition place the agents on the graph.
 		Pokemon.PutOnBoard(game);
 		//
-		up(Pokemon.getArena());
+		up(Pokemon.getArena(),game);
 		
 		_win.show();
 		game.startGame();
-		int ind=10;
+		int ind=0;
 
 		while(game.isRunning()) {		
-			if(ind%10==0) {_win.repaint();}
+			if(ind%1==0) {_win.repaint();}
 
 			try {
 				Pokemon.moveAgants(game);
-				Thread.sleep(Pokemon.getTimeToSlip());
+				Thread.sleep( 1000/60 );
+				ind++;
 
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		
 		}
 		System.out.println(game.toString());
 		System.exit(0);
@@ -85,8 +87,8 @@ public class Ex2 implements Runnable  {
 	}
 
 	
-	public void up(Arena arena) {
-		_win = new GUI();
+	public void up(Arena arena,game_service game) {
+		_win = new GUI(game);
 		_win.setSize(1000, 700);
 		_win.update(arena);
 		_win.setVisible(true);
