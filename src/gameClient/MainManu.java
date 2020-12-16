@@ -1,12 +1,10 @@
 package gameClient;
 
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageObserver;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -26,8 +24,11 @@ public class MainManu extends JFrame{
 		start_game=false;
 		folderInput	 = new File("src\\images\\winningImage.png");
 		_StartButton = new JButton("Start game");
+		ImageIcon p = new ImageIcon("src\\images\\sed.jpg");
+		
+		 Image img = p.getImage() ;  
+		Image newimg = img.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH ) ;
 		_QuitButton = new JButton("Quit",new ImageIcon("src\\images\\sed.jpg"));
-		_QuitButton.setMargin(new Insets(0, 0, 0, 0));
 		_StartButton.addActionListener(new action()); 
 		_QuitButton.addActionListener(new action());
 		putPicter();
@@ -59,35 +60,8 @@ public LoginPanel getLoginPanel() {
 //		_QuitButton.setIcon(new ImageIcon("src\\images\\sed.jpg"));
 //		_QuitButton.setSize(1, 1);
 	}
-//	class MyButton extends JButton {
-//		
-//		    Image image;
-//		
-//		    ImageObserver imageObserver;
-//		
-//		     
-//		
-//		    MyButton(String filename) {
-//		
-//		        super();
-//		
-//		        ImageIcon icon = new ImageIcon(filename);
-//		
-//		        image = icon.getImage();
-//		
-//		        imageObserver = icon.getImageObserver();
-//		
-//		    }
-		
-//		    public void paint( Graphics g ) {
-//		
-//		        super.paint( g );
-//		
-//		        g.drawImage(image,  0 , 0 , getWidth() , getHeight() , imageObserver);
-//		
-//		    }
-//
-//	}
+
+
 	private void addButton() {
 		background1.add(_StartButton);
 //		_QuitButton.setBounds(20, 20, 20, 20);
