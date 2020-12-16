@@ -106,13 +106,22 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 				_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w));
 				return;
 			}
-			else 
+			else if(_edgeData.containsKey(_nodeData.get(dest))&&_edgeData.get(_nodeData.get(dest)).containsKey(_nodeData.get(src))) {
 				if(!_edgeData.containsKey(_nodeData.get(src)))	
 					_edgeData.put(_nodeData.get(src), new HashMap<node_data,edge_data>());
-			_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w) );
+				_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w));				
+				_edgeData.get(_nodeData.get(dest)).put(_nodeData.get(src),new EdgeData(dest,src,w));				
+				sizeOfEdge++;
+				modeCount++;
+				return;
+			}
+			else  
+				if(!_edgeData.containsKey(_nodeData.get(src)))	
+					_edgeData.put(_nodeData.get(src), new HashMap<node_data,edge_data>());
+			_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w));
 			sizeOfEdge++;
 			modeCount++;
-			
+
 		}
 		else 
 			return;
@@ -174,6 +183,7 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 			modeCount=modeCount+_edgeData.get(_nodeData.get(key)).size();
 			_edgeData.remove(_nodeData.get(key));
 			_nodeData.remove(key);
+			
 			return removeNode; 
 		}
 		else

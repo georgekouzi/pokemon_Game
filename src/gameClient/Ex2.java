@@ -75,7 +75,7 @@ public class Ex2 implements Runnable  {
 
 			try {
 				Pokemon.moveAgants(game);
-				Thread.sleep( 1000/60 );
+				Thread.sleep( Pokemon.getTimeToSlip() );
 				ind++;
 
 			}
@@ -92,9 +92,8 @@ public class Ex2 implements Runnable  {
 	
 	public void up(Arena arena,game_service game) {
 		_win = new GUI(game);
-		_win.setSize(1000, 700);
+		System.out.println(_win.getSize().width);
 		_win.update(arena);
-		_win.setVisible(true);
 		
 	}
 	
