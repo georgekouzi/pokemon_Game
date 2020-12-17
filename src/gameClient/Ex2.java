@@ -15,8 +15,9 @@ public class Ex2 implements Runnable  {
 	private static GUI _win;
 	private static File folderInput = new File("src\\images\\winningImage.png");
 	private static long id;
-
+	private static MainManu main; 
 	public static void main(String args[]){
+		 main =new MainManu();
 		StartWithManu();
 		Thread client = new Thread(new Ex2());
 		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
@@ -85,7 +86,9 @@ public class Ex2 implements Runnable  {
 		
 		}
 		System.out.println(game.toString());
+		
 		System.exit(0);
+		main.getLoginPanel().addlogin();
 
 	}
 

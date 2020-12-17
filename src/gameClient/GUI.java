@@ -74,7 +74,6 @@ public class GUI extends JFrame{
 //		device.setFullScreenWindow(this);
 
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
-
 		this.game=game;
 		_ind = 0;
 		_ar=new Arena();
@@ -145,22 +144,6 @@ public class GUI extends JFrame{
 		g.drawString("Score: "+String.valueOf(score), this.getWidth()-200, 70);
 		}
 		}
-
-
-
-
-	//	private void drawInfo(Graphics g) {
-	//		List<String> str = _ar.get_info();
-	//		String dt = "none";
-	//		for(int i=0;i<str.size();i++) {
-	//			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
-	//		}
-	//	}
-
-	//		drawGraph(g);
-
-	//		drawInfo(g);
-
 
 
 

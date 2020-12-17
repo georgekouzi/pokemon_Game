@@ -10,13 +10,22 @@ import api.edge_data;
 import api.node_data;
 
 
-
+/**
+ This class creates an directed weighted graph that holds the addition of nodes
+ * You can add new nodes, connect two nodes by ribs, delete nodes, delete ribs between two nodes, 
+ * you can check if a rib exists, you can get a particular node, 
+ * you can get the list of all the neighbors of a particular node and the list of nodes.
+ * In addition, you can know the number of nodes in the graph, the number of ribs 
+ * and the number of actions performed in the graph (such as deleting the addition of a node)
+ * Each node has the option to keep its neighbors in HashMap of HashMap- (_edgeData) and all the node that we add to the graph save in HashMap- (_nodeData).   
+ *@author George kouzy and Dolev Saadia. 
+ */
 
 
 public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 	private static final long serialVersionUID = 1L;
-	// HashMap in HashMap hold all the edges and the weights in the graph: first key node_info(src), next key node_info(dest) and the value is double (weight).
+	// HashMap in HashMap hold all the edges and the weights in the graph: first key node_info(src), next key node_info(_nodeData) and the value is obj (edge_data).
 	private HashMap<node_data,HashMap<node_data,edge_data>> _edgeData;
 	// This HashMap hold all the nodes in the graph.  
 	private HashMap<Integer,node_data> _nodeData;
@@ -49,11 +58,13 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 	}
 	/**
-	 * returns the data of the edge (src,dest), null if none.
+	 *check if src exist and dest exist and if there is an edge between them. 
+	 *In case there is no such edge - should return -null
+	 * returns the data of the edge [src , dest , Weight].
 	 * Note: this method should run in O(1) time.
 	 * @param src
 	 * @param dest
-	 * @return
+	 * @return - obj-edge data.
 	 */
 	@Override
 	public edge_data getEdge(int src, int dest) {
@@ -64,7 +75,9 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	}
 	/**
 	 * adds a new node to the graph with the given node_data.
-	 * Note: this method should run in O(1) time.
+	 * run time- O(1).
+	 * if there is already a node with such a key no action be performed.
+	 * This is an action that is done on the graph, so mode count need to be updated(+1).
 	 * @param n
 	 */
 	@Override
@@ -77,7 +90,9 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	}
 	/**
 	 * Connects an edge with weight w between node src to node dest.
-	 * * Note: this method should run in O(1) time.
+	 * run time- O(1) .
+	 * if the edge src-dest already exists - the method simply updates the weight of the edge object.
+	 * Connect an edge between src and dest, with an edge with weight >=0.
 	 * @param src - the source of the edge.
 	 * @param dest - the destination of the edge.
 	 * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
@@ -116,8 +131,9 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 				return;
 			}
 			else  
-				if(!_edgeData.containsKey(_nodeData.get(src)))	
+				if(!_edgeData.containsKey(_nodeData.get(src))) {	
 					_edgeData.put(_nodeData.get(src), new HashMap<node_data,edge_data>());
+				}
 			_edgeData.get(_nodeData.get(src)).put(_nodeData.get(dest),new EdgeData(src,dest,w));
 			sizeOfEdge++;
 			modeCount++;
@@ -132,8 +148,8 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	/**
 	 * This method returns a pointer (shallow copy) for the
 	 * collection representing all the nodes in the graph. 
-	 * Note: this method should run in O(1) time.
-	 * @return Collection<node_data>
+	 * run time O(1).
+	 * @return Collection of all the node in this graph.
 	 */
 	@Override
 	public Collection<node_data> getV() {
@@ -143,8 +159,8 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	 * This method returns a pointer (shallow copy) for the
 	 * collection representing all the edges getting out of 
 	 * the given node (all the edges starting (source) at the given node). 
-	 * Note: this method should run in O(k) time, k being the collection size.
-	 * @return Collection<edge_data>
+	 * run time O(1).
+	 * @return Collection<node_info> else return empty Collection.
 	 */
 	@Override
 	public Collection<edge_data> getE(int node_id) {
@@ -162,7 +178,7 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	/**
 	 * Deletes the node (with the given ID) from the graph -
 	 * and removes all edges which starts or ends at this node.
-	 * This method should run in O(k), V.degree=k, as all the edges should be removed.
+	 *run time O(1).
 	 * @return the data of the removed node (null if none). 
 	 * @param key
 	 */
@@ -170,8 +186,10 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 	@Override
 	public node_data removeNode(int key) {
 		if(_nodeData.containsKey(key)) {
+
 			//if node(key) have neighbors.
 			node_data removeNode=_nodeData.get(key);
+
 			for(node_data n: getV()) {
 				if(_edgeData.containsKey(n)&&_edgeData.get(n).containsKey(_nodeData.get(key))) {		
 					_edgeData.get(n).remove(_nodeData.get(key));
@@ -179,17 +197,26 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 					modeCount++;
 				}
 			}
-			sizeOfEdge=sizeOfEdge-_edgeData.get(_nodeData.get(key)).size();
-			modeCount=modeCount+_edgeData.get(_nodeData.get(key)).size();
-			_edgeData.remove(_nodeData.get(key));
+			if(_edgeData.containsKey(_nodeData.get(key))) {		       
+				sizeOfEdge=sizeOfEdge-_edgeData.get(_nodeData.get(key)).size();
+				modeCount=modeCount+_edgeData.get(_nodeData.get(key)).size();
+				_edgeData.remove(_nodeData.get(key));
+
+			}			
 			_nodeData.remove(key);
-			
+
 			return removeNode; 
 		}
 		else
 			return null;
 	}
-
+	/**
+	 * Deletes the edge from the graph,
+	 * run time O(1).
+	 * @param src
+	 * @param dest
+	 * @return the data of the removed edge if not exist return null.
+	 */
 	@Override
 	public edge_data removeEdge(int src, int dest) {
 		if(_nodeData.containsKey(src)&&_nodeData.containsKey(dest) &&_edgeData.containsKey(_nodeData.get(src))&&_edgeData.get(_nodeData.get(src)).containsKey(_nodeData.get(dest))) {
@@ -204,16 +231,29 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 
 
 	}
-
+	/** return the number of vertices (nodes) in the graph.
+	 * run time O(1).
+	 * @return - int number of node in the graph.
+	 */
 	@Override
 	public int nodeSize() {
 		return _nodeData.size();
 	}
-
+	/**
+	 * return the number of edges (directed graph).
+	 * run time O(1).
+	 * @return int edges size.
+	 */
 	@Override
 	public int edgeSize() {
 		return sizeOfEdge;
 	}
+	/**
+	 * return the Mode Count - for testing changes in the graph.
+	 * Any change(remove node and edge,add node, connect between two nodes and update weight between two nodes that already exist)
+	 * in the inner state of the graph should cause an increment in the ModeCount
+	 * @return - int mode count.
+	 */
 
 	@Override
 	public int getMC() {
@@ -240,5 +280,23 @@ public class DWGraph_DS implements directed_weighted_graph,Serializable  {
 		return s; 
 
 	}
+	/**
+	 * equals function -  if two graph are equal return true
+	 * @return true if this edge_data equal to other edge_data and this node_data equal to other node_data
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof DWGraph_DS)) {
+			return false;
+		}
+		DWGraph_DS otherObject =  (DWGraph_DS) obj;
+		if (!_nodeData.equals(otherObject._nodeData)||!(_edgeData.equals(otherObject._edgeData))) {
+			return false;
+		}
+		else
+			return true;
 
+	}
 }

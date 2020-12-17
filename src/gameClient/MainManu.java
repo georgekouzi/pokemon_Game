@@ -26,8 +26,8 @@ public class MainManu extends JFrame{
 		start_game=false;
 		folderInput	 = new File("src\\images\\winningImage.png");
 		_StartButton = new JButton("Start game");
-		_QuitButton = new JButton("Quit",new ImageIcon("src\\images\\sed.jpg"));
-		_QuitButton.setMargin(new Insets(0, 0, 0, 0));
+		_QuitButton = new JButton("Quit");
+		_QuitButton.setSize(100,100);
 		_StartButton.addActionListener(new action()); 
 		_QuitButton.addActionListener(new action());
 		putPicter();
