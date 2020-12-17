@@ -88,14 +88,12 @@ public class Ex2 implements Runnable  {
 		System.out.println(game.toString());
 		
 		System.exit(0);
-		main.getLoginPanel().addlogin();
 
 	}
 
 	
 	public void up(Arena arena,game_service game) {
 		_win = new GUI(game);
-		System.out.println(_win.getSize().width);
 		_win.update(arena);
 		
 	}

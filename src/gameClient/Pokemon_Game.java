@@ -40,11 +40,11 @@ public class Pokemon_Game {
 	private static HashMap<Integer,List<node_data>> AgentPath; 
 	// This HashMap Keeps the agent's ID inside a key and the value of that agent will be the Pokemon that agent looking for.
 	private static HashMap<Integer,CL_Pokemon> PokemonToAgent; 
-	
-//	private static int scenaio;
-//	private static GUI _win;
-//	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
-//	long _id;
+
+	//	private static int scenaio;
+	//	private static GUI _win;
+	//	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
+	//	long _id;
 	public Pokemon_Game() {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
@@ -52,14 +52,14 @@ public class Pokemon_Game {
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
 	}
-	
+
 
 	public  long getTimeToSlip() {
 		return timeToSlip;
 	}
-	
-	
-	 /**
+
+
+	/**
 	 * This function allows us to write a Json file indicating the graph of the given game service 
 	 * and load it with the load function from the DWGraph_AlgoGW class.
 	 * @param JsonGraph
@@ -80,7 +80,6 @@ public class Pokemon_Game {
 
 		algo.load(fileName);
 
-
 	}
 
 	/**
@@ -92,16 +91,18 @@ public class Pokemon_Game {
 	 * @param game
 	 */
 
-	public synchronized void moveAgants(game_service game) {
+	public  void moveAgants(game_service game) {
 		String lg = game.move();
 		List<CL_Agent> AgentsList = Arena.getAgents(lg,algo.getGraph());
 		PokemonUpdate(game);
 		_Arena.setAgents(AgentsList);
 		_Arena.setPokemons(_Pokemon_data);
-		
+
 		for(int i=0;i<AgentsList.size();i++) {
+			 
 			CL_Agent Agent=AgentsList.get(i);
 			//If the agent reached the previous destination
+			synchronized (Agent){
 			if(Agent.getNextNode()==-1) {
 				int newDest=chooseNextNode(Agent,game);
 				game.chooseNextEdge(Agent.getID(),newDest);
@@ -110,7 +111,7 @@ public class Pokemon_Game {
 		}
 
 	}
-
+	}
 	/**
 	 * This function checks if a route has already been set for the agent and then sends the agent to the next node.
 	 * If this agent has no Path at all it will send it to the NewPath function 
@@ -120,11 +121,11 @@ public class Pokemon_Game {
 	 * @param game
 	 * @return -return the next destination.
 	 */
-	public int chooseNextNode( CL_Agent Agent,game_service game){
+	public synchronized int chooseNextNode( CL_Agent Agent,game_service game){
 
 		if(AgentPath.containsKey(Agent.getID())) {
 			int nextDest= AgentPath.get(Agent.getID()).remove(0).getKey();
-			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),nextDest).getWeight()*250/Agent.getSpeed());
+			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),nextDest).getWeight()*260/Agent.getSpeed());
 			if(AgentPath.get(Agent.getID()).isEmpty()) {
 				AgentPath.remove(Agent.getID());
 				PokemonToAgent.remove(Agent.getID());
@@ -148,11 +149,10 @@ public class Pokemon_Game {
 	 * @return -return the next destination.
 	 */
 
-	public int NewPath(CL_Agent Agent) {
+	public synchronized int NewPath(CL_Agent Agent) {
 		UntrackedPokemon();
 
 
-		//		int sortpht=Integer.MAX_VALUE;
 		double sortpht=Double.MAX_VALUE;
 
 		for(int i =0 ; i<_Pokemon_data.size();i++) {
@@ -167,22 +167,31 @@ public class Pokemon_Game {
 					sortpht=w1;
 					AgentPath.put(Agent.getID(), p1);
 					PokemonToAgent.put(Agent.getID(), _Pokemon_data.get(i));
+
 				}
 			}
-			else if(w>0.0&&w< sortpht) {
-				sortpht=w;
-				AgentPath.put(Agent.getID(), p);
-				PokemonToAgent.put(Agent.getID(), _Pokemon_data.get(i));
-
+			else if(p.size()>p1.size()) { 
+				if(w>0.0&&w < sortpht) {
+					sortpht=w;
+					AgentPath.put(Agent.getID(), p);
+					PokemonToAgent.put(Agent.getID(), _Pokemon_data.get(i));
+				}
 			}
+			else 
+				AgentPath.put(Agent.getID(), p);
+	
 		}
+
 		AgentPath.get(Agent.getID()).remove(0);
+//		}
 		int newdest=AgentPath.get(Agent.getID()).remove(0).getKey();
+
 		if(AgentPath.get(Agent.getID()).isEmpty()) {
 			AgentPath.remove(Agent.getID());
 			PokemonToAgent.remove(Agent.getID());
 		}
-		timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),newdest).getWeight()*250/Agent.getSpeed());
+		timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),newdest).getWeight()*260/Agent.getSpeed());
+
 		return newdest;
 
 	}
@@ -201,14 +210,7 @@ public class Pokemon_Game {
 		PokemonUpdate(game);
 		_Arena.setPokemons(_Pokemon_data);
 		putAgents(game);
-	
-//		_win = new GUI();
-//		_win.setSize(1000, 700);
-//		_win.update(_Arena);
-//		_win.setVisible(true);
-//		_win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		
-		
+
 	}
 
 
@@ -239,7 +241,7 @@ public class Pokemon_Game {
 		Collections.sort(_Pokemon_data, new maxValue());
 		for (CL_Pokemon p: _Pokemon_data) {
 			Arena.updateEdge(p,algo.getGraph());
-			
+
 		}
 	}
 	/**
