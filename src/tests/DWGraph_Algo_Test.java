@@ -25,7 +25,7 @@ class DWGraph_Algo_Test {
 		assertTrue(algo.isConnected());
 		assertNull(algo.shortestPath(1, 0));
 		assertEquals(algo.shortestPathDist(1, 0),-1);
-		assertTrue(algo.save("testEmptyGraph"));
+		assertTrue(algo.save("file//testEmptyGraph"));
 
 	}
 	//
@@ -39,7 +39,7 @@ class DWGraph_Algo_Test {
 		assertTrue(algo.isConnected());
 		assertNull(algo.shortestPath(1, 0));
 		assertEquals(algo.shortestPathDist(1, 0),-1);
-		assertTrue(algo.save("testOneNodeGraph"));
+		assertTrue(algo.save("file//testOneNodeGraph"));
 
 	}
 	@Test
@@ -51,7 +51,7 @@ class DWGraph_Algo_Test {
 		algo.getGraph().addNode(new NodeData(1));
 		algo.getGraph().addNode(new NodeData(2));
 
-		assertTrue(algo.save("testGraph"));
+		assertTrue(algo.save("file//testGraph"));
 		assertFalse(algo.isConnected());
 		assertNull(algo.shortestPath(1, 2));
 		assertEquals(algo.shortestPathDist(1, 2),-1);
@@ -67,7 +67,7 @@ class DWGraph_Algo_Test {
 		assertEquals(algo.shortestPathDist(2, 1),51.340);
 		assertNotNull(algo.shortestPath(1, 2));
 		assertEquals(algo.shortestPath(1, 2).size(),2);
-		assertTrue(algo.save("testGraph_1"));
+		assertTrue(algo.save("file//testGraph_1"));
 
 	}
 
@@ -147,29 +147,29 @@ class DWGraph_Algo_Test {
 				}
 				assertArrayEquals(expected2,actual2);
 		
-				assertTrue(algo.save("testGraph1"));
-				assertTrue(algo.load("testGraph1"));
+				assertTrue(algo.save("file//testGraph1"));
+				assertTrue(algo.load("file//testGraph1"));
 //				System.out.println(algo.getGraph());
 				assertEquals(algo.shortestPathDist(1, 5),15.34322);
 				algo.init(g1);
-				assertTrue(algo.save("newfile1"));
+				assertTrue(algo.save("file//newfile1"));
 				assertEquals(algo.getGraph().nodeSize(),5);
 				assertEquals(algo.getGraph().edgeSize(),7);
-				assertTrue(algo.load("testGraph1"));
+				assertTrue(algo.load("file//testGraph1"));
 				assertNotEquals(algo.getGraph().nodeSize(),5);
 				assertNotEquals(algo.getGraph().edgeSize(),5);
 				assertEquals(algo.getGraph().nodeSize(),6);
 				assertEquals(algo.getGraph().edgeSize(),12);
-				assertTrue(algo.load("testEmptyGraph"));
+				assertTrue(algo.load("file//testEmptyGraph"));
 				assertEquals(algo.getGraph().nodeSize(),0);
 				assertEquals(algo.getGraph().edgeSize(),0);
-				assertTrue(algo.load("testOneNodeGraph"));
+				assertTrue(algo.load("file//testOneNodeGraph"));
 				assertEquals(algo.getGraph().nodeSize(),1);
 				assertEquals(algo.getGraph().edgeSize(),0);
-				assertTrue(algo.load("testGraph"));
+				assertTrue(algo.load("file//testGraph"));
 				assertEquals(algo.getGraph().nodeSize(),2);
 				assertEquals(algo.getGraph().edgeSize(),0);
-				assertTrue(algo.load("testGraph1"));
+				assertTrue(algo.load("file//testGraph1"));
 
 	}
 	@Test

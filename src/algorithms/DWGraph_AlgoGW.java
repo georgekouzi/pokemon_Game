@@ -275,7 +275,17 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 	}
 
-
+	/**
+	 * This algorithm makes it possible to go over a weighted directed graph
+     *the node stack, which starts out empty and stores the history of nodes explored but not yet committed to a strongly connected component.
+     ** as nodes are not popped as the search returns up the tree; they are only popped when an entire strongly connected component has been found.
+     *The outermost loop searches each node that has not yet been visited, ensuring that nodes which are not reachable from the first node are still eventually traversed. 
+     *finding all successors from the node v, and reporting all strongly connected components of that subgraph.
+     *When each node finishes recursing, if its lowlink is still set to its index, then it is the root node of a strongly connected component, formed by all of the nodes above it on the stack.
+     * The algorithm pops the stack up to and including the current node, and presents all of these nodes as a strongly connected component.
+     * Note that v.lowlink := min(v.lowlink, w.index) is the correct way to update v.lowlink if w is on stack.
+      *Because w is on the stack already, (v, w) is a back-edge in the DFS tree and therefore w is not in the subtree of v. Because v.lowlink takes into account nodes reachable only through the nodes in the subtree of v we must stop at w and use w.index instead of w.lowlink.
+	 */
 
 	private void DFS(node_data n) {
 
@@ -408,6 +418,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		private HashMap<Integer,Integer> lowlink;
 		private int count;
 
+	
 
 		TarjanAlgo(){
 			lowlink= new HashMap<Integer,Integer>();

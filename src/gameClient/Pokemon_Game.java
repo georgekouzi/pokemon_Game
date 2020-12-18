@@ -40,17 +40,15 @@ public class Pokemon_Game {
 	private static HashMap<Integer,List<node_data>> AgentPath; 
 	// This HashMap Keeps the agent's ID inside a key and the value of that agent will be the Pokemon that agent looking for.
 	private static HashMap<Integer,CL_Pokemon> PokemonToAgent; 
-
-	//	private static int scenaio;
-	//	private static GUI _win;
-	//	static File folderInput = new File("C:\\Users\\user\\eclipse-workspace\\pokemon_Game\\src\\images\\winningImage.png");
-	//	long _id;
-	public Pokemon_Game() {
+	game_service game;
+	
+	public Pokemon_Game(game_service _game) {
 		_Arena=new Arena();
 		algo= new DWGraph_AlgoGW();
 		AgentPath=new HashMap<Integer,List<node_data>>();
 		PokemonToAgent=new HashMap<Integer,CL_Pokemon>(); 
 		timeToSlip=0;	
+		game=_game;
 	}
 
 
@@ -109,9 +107,9 @@ public class Pokemon_Game {
 				System.out.println("Agent: "+Agent.getID()+", val: "+Agent.getValue()+"   turned to node: "+newDest);
 			}
 		}
-
+		}
 	}
-	}
+	
 	/**
 	 * This function checks if a route has already been set for the agent and then sends the agent to the next node.
 	 * If this agent has no Path at all it will send it to the NewPath function 
@@ -125,7 +123,7 @@ public class Pokemon_Game {
 
 		if(AgentPath.containsKey(Agent.getID())) {
 			int nextDest= AgentPath.get(Agent.getID()).remove(0).getKey();
-			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),nextDest).getWeight()*260/Agent.getSpeed());
+			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),nextDest).getWeight()*250/Agent.getSpeed());
 			if(AgentPath.get(Agent.getID()).isEmpty()) {
 				AgentPath.remove(Agent.getID());
 				PokemonToAgent.remove(Agent.getID());
@@ -177,9 +175,10 @@ public class Pokemon_Game {
 					PokemonToAgent.put(Agent.getID(), _Pokemon_data.get(i));
 				}
 			}
-			else 
-				AgentPath.put(Agent.getID(), p);
-	
+
+		}
+		if(!AgentPath.containsKey(Agent.getID())) {
+			return algo.getGraph().getE(Agent.getSrcNode()).iterator().next().getDest();
 		}
 
 		AgentPath.get(Agent.getID()).remove(0);
@@ -190,7 +189,7 @@ public class Pokemon_Game {
 			AgentPath.remove(Agent.getID());
 			PokemonToAgent.remove(Agent.getID());
 		}
-		timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),newdest).getWeight()*260/Agent.getSpeed());
+		timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),newdest).getWeight()*250/Agent.getSpeed());
 
 		return newdest;
 

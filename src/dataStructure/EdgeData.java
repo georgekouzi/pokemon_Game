@@ -96,7 +96,7 @@ public class EdgeData implements edge_data,Serializable {
 	}
 
 	public String toString() {
-		return "src="+_src+" , "+"dest= "+_dest+","+"w= "+_w;
+		return "w= "+_w;
 	}
 	
 	

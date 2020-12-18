@@ -11,16 +11,19 @@ import api.game_service;
  */
 public class Ex2 implements Runnable  {
 	private final static AtomicBoolean run = new AtomicBoolean(false);
-	private static int scenaio;
+	private static int scenaio=-1;
 	private static GUI _win;
 	private static File folderInput = new File("src\\images\\winningImage.png");
 	private static long id;
-	private static MainManu main; 
 	public static void main(String args[]){
-		 main =new MainManu();
-		StartWithManu();
+		
+		if (args[1] == null) {
+			StartWithManu();
+		}
+		id=Integer.parseInt(args[1]);
+		scenaio=Integer.parseInt(args[1]);
 		Thread client = new Thread(new Ex2());
-		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
+		Thread Music = new Thread(new MyMusic("file//Pokemon.mp3"));
 		client.start();
 		Music.start();
 		if(!client.isAlive()) 
@@ -58,7 +61,7 @@ public class Ex2 implements Runnable  {
 
 		game_service game= Game_Server_Ex2.getServer(scenaio);		
 		game.login(id);
-		Pokemon_Game Pokemon =new Pokemon_Game();
+		Pokemon_Game Pokemon =new Pokemon_Game(game);
 
 		//make json file and load it from file 
 		Pokemon.reade_data(game.getGraph(),"graph_game");
