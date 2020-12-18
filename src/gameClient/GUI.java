@@ -3,12 +3,15 @@ package gameClient;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -213,6 +216,12 @@ public class GUI extends JFrame{
 		g.drawLine((int)s0.x()-12, (int)s0.y()-102, (int)d0.x()-12, (int)d0.y()-102);
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
 
+<<<<<<< HEAD
+=======
+		 String printValue = gg.getEdge(e.getSrc(), e.getDest()).toString();
+		 
+		g.drawString(""+printValue,(int)d0.x()-12, (int)s0.y()-102);
+>>>>>>> 3651e360d00096648ea0a75493c668b0f0bd932e
 
 	}
 
