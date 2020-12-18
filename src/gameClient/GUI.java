@@ -3,12 +3,15 @@ package gameClient;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -155,15 +158,16 @@ public class GUI extends JFrame{
 				geo_location fp = this._w2f.world2frame(c);
 
 				if(fp!=null) {
-					g.drawImage(charmanderimg,(int)fp.x()-11, (int)fp.y()-121,120, 120, null);
-					//					}
-					//					else if(pokemonrandome==1) {
-					//						g.drawImage(balbazurimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
-					//
-					//					}
-					//					else
-					//						g.drawImage(squiltelimg,(int)fp.x()-11, (int)fp.y()-121,100, 100, null);
-					//
+					if (f.getType()==1) {
+						g.drawImage(charmanderimg,(int)fp.x()-11, (int)fp.y()-121,120, 120, null);
+					}
+					else if (f.getType()==2) {
+						g.drawImage(squiltelimg,(int)fp.x()-11, (int)fp.y()-121,120, 120, null);
+					}
+					else {
+						g.drawImage(balbazurimg,(int)fp.x()-11, (int)fp.y()-121,120, 120, null);
+					}
+					
 				}
 			}
 		}
@@ -181,12 +185,13 @@ public class GUI extends JFrame{
 		int i=0;
 		while(rs!=null && i<rs.size()) {
 			geo_location c = rs.get(i).getLocation();
+//			String[] strs = rs.get(i).toString().split("(?<=\\})(?=\\{)");
+//			g2d.drawString(""+strs[i],(int)c.x(), (int)c.y()+50);
 			i++;
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
 				g2d.drawImage(hash,(int)fp.x()-11, (int)fp.y()-101,  40, 40, null);
-
 			}
 		}
 
@@ -198,6 +203,7 @@ public class GUI extends JFrame{
 	 */
 	
 	private void drawEdge(edge_data e, Graphics g) {
+		 
 		directed_weighted_graph gg = _ar.getGraph();
 		geo_location s = gg.getNode(e.getSrc()).getLocation();
 		geo_location d = gg.getNode(e.getDest()).getLocation();
@@ -208,6 +214,11 @@ public class GUI extends JFrame{
 		g.drawLine((int)s0.x()-10, (int)s0.y()-100, (int)d0.x()-10, (int)d0.y()-100);
 		g.drawLine((int)s0.x()-11, (int)s0.y()-101, (int)d0.x()-11, (int)d0.y()-101);
 		g.drawLine((int)s0.x()-12, (int)s0.y()-102, (int)d0.x()-12, (int)d0.y()-102);
+		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
+
+		 String printValue = gg.getEdge(e.getSrc(), e.getDest()).toString();
+		 
+		g.drawString(""+printValue,(int)d0.x()-12, (int)s0.y()-102);
 
 	}
 
