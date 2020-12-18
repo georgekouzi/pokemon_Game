@@ -11,6 +11,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+/**
+ * This class represents a very simple  gui class to present a
+ * mainmanu befor the game start.
+ *
+ */
 
 public class MainManu extends JFrame{
 	static File folderInput;
@@ -19,16 +24,15 @@ public class MainManu extends JFrame{
 	private static JLabel background1;
 	public LoginPanel log;
 	public boolean start_game;
-
+	/**
+	 * consractor crate the mainmanu window and init image beckground the jframes and the buttons for mainmanue panel 
+	 *
+	 */
 	public MainManu() {
 		start_game=false;
 		folderInput	 = new File("src\\images\\winningImage.png");
 		_StartButton = new JButton("Start game");
-		ImageIcon p = new ImageIcon("src\\images\\sed.jpg");
-		
-		 Image img = p.getImage() ;  
-		Image newimg = img.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH ) ;
-		_QuitButton = new JButton("Quit",new ImageIcon("src\\images\\sed.jpg"));
+		_QuitButton = new JButton("Quit");
 		_StartButton.addActionListener(new action()); 
 		_QuitButton.addActionListener(new action());
 		putPicter();
@@ -36,40 +40,58 @@ public class MainManu extends JFrame{
 		makeWindow();
 
 	}
-	
+	/**
+	 * this function return true when we put on loginbutton and the id is currect
+	 * for staring game
+	 *
+	 */
 	public boolean get_start() {
 		return start_game;
 	}
-
+	/**
+	 * this function return the Loginpanel for the game
+	 *
+	 */
 public LoginPanel getLoginPanel() {
 	return log;
 }
 
+/**
+ * this function make the mainmanu window for the game
+ *
+ */
 	private void makeWindow() {
 		pack();
 		setTitle("Pokemon Game");
 		setLocationRelativeTo(null); // center this window on the screen
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // when this window is closed, exit this application
-		setVisible(true); // ca
+		setVisible(true); 
 	}
+	/**
+	 * this function mput the img to beckground
+	 *
+	 */
 
 	private void putPicter() {
 		background1 =new JLabel(new ImageIcon(folderInput.getAbsolutePath()));
 		background1.setLayout(new FlowLayout());
 		add(background1);
-//		_QuitButton.setIcon(new ImageIcon("src\\images\\sed.jpg"));
-//		_QuitButton.setSize(1, 1);
 	}
-
+	/**
+	 * this function add the buttons to mainmanue window
+	 *
+	 */
 
 	private void addButton() {
 		background1.add(_StartButton);
-//		_QuitButton.setBounds(20, 20, 20, 20);
 		background1.add(_QuitButton);
-
-
 	}
 
+	/**
+	 * this inner class pressent  all action on the when click buttons 
+	 *
+	 */
+	
 	public class action implements ActionListener{
 
 		@Override
@@ -79,15 +101,8 @@ public LoginPanel getLoginPanel() {
 			}
 			if(button.getSource()==_StartButton) {
 				log = new LoginPanel();
-				start_game=true;
-				
+				start_game=true;	
 			}
-
 		}
-	
-	}
-	public static void main(String[] args) {
-		MainManu a= new MainManu();
-
 	}
 }

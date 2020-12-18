@@ -44,108 +44,6 @@ import gameClient.util.Point3D;
 
 public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
-	public static void main(String[] args) {
-
-		directed_weighted_graph g=new DWGraph_DS();
-
-		//		
-		//		for(int i=0;i<1000000;i++) {
-		//		g.addNode(new NodeData());
-		//		}
-		g.addNode(new NodeData());
-		g.addNode(new NodeData());
-		g.addNode(new NodeData());
-		g.addNode(new NodeData());
-		g.addNode(new NodeData());
-		g.addNode(new NodeData());
-
-		g.connect(0, 3, 8.22);
-		g.connect(1, 2, 4.0);
-		g.connect(1, 4, 6.34);
-		g.connect(2, 3, 7.877);
-		g.connect(3, 1, 6.565);
-		g.connect(4, 2, 1.2);
-		g.connect(4, 0, 7.5);
-		g.connect(0, 2, 8.22);
-
-		//		g.connect(4, 3, 1.2);
-		//
-		//		directed_weighted_graph g1=new DWGraph_DS();
-		//		int size =  1000*1000;
-		//		int ten=1;
-		//		for (int i = 0; i <size; i++) {
-		//			g1.addNode(new NodeData());
-		//		}
-		//
-		//		for (int i = 0; i <size*10; i++) {
-		//			int dest=i;
-		//			g1.connect(size-2, i, 0.23); 
-		//			g1.connect(i, size-2, 0.23); 
-		//			g1.connect(i, size-4, 0.23); 
-		//			g1.connect(size-4, i, 0.23); 
-		//			g1.connect(i, size-8, 0.23); 
-		//			g1.connect(size-8, i, 0.23); 
-		//			g1.connect(i, size-10, 0.23); 
-		//			g1.connect(size-10, i, 0.23); 
-		//			g1.connect(i, size-140, 0.23); 
-		//			g1.connect(size-12, i, 0.23); 
-		//			g1.connect(i, size-1, 0.23); 
-		//			g1.connect(size-1, i, 0.23); 
-		////			if(i<size-1){
-		////				g1.connect(i,++dest,0.78);
-		////			}
-		////			if(i%2==0&&i<size-2) {
-		////				g1.connect(i,2+dest,0.94);
-		////			}	
-		////
-		////			if(ten==i&&(i%2==0)) {
-		////				for (int j =0 ; j <size; j++) {
-		////					g1.connect(ten, j,0.56);
-		////					g1.connect(ten-2, j, 0.4);
-		////
-		////				}
-		////
-		////				ten=ten*10;
-		////			}
-
-
-		//}
-		dw_graph_algorithms algo= new DWGraph_AlgoGW();
-		algo.init(g);
-		//		System.out.println(algo.shortestPath(1, 3));
-		//		algo.shortestPath(1, 3);
-
-		//		for(node_data n :algo.shortestPath(0, 2)) {
-		//			System.out.println(n.getKey());
-		//		}
-		//		System.out.println(algo.shortestPathDist(0, 2));
-		//		System.out.println();
-		//		//
-		//		//g.removeNode(3);
-		//		for(node_data n :algo.shortestPath(0, 4)) {
-		//					System.out.println(n.getKey());
-		//		}
-		System.out.println(algo.isConnected());
-		//		System.out.println(g.edgeSize());
-
-		dw_graph_algorithms G= new DWGraph_AlgoGW();
-		G.init(g);
-		//		System.out.println(G.getGraph());
-		//		G.save("hg.json");
-		//		G.load("hg.json");
-
-		//				G.load("A0");
-		G.save("hj");
-		G.load("hj");
-		//				System.out.println(G.getGraph());
-		//
-		//				g1=G.copy();
-		//		//		g.removeNode(5);
-		//				System.out.println(g1);
-		//		System.out.println(g);
-		//		g1=G.copy();
-		//		System.out.println(g1);
-	}
 	private directed_weighted_graph _DWGraph;
 	private TarjanAlgo Tarjan_Algo;
 	private HashMap<Integer,nodeAlgo> node_info;
@@ -229,7 +127,6 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			if (n.getInfo().equals("false")) 
 				DFS(n);
 		}
-
 		return (Tarjan_Algo._count_connected_graphs == 1);
 
 	}
@@ -246,8 +143,10 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	 */
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) 
+		if(_DWGraph.getE(src).isEmpty()||_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) {
+
 			return-1;	
+		}
 		if(src==dest) { 
 			return 0.0;
 		}	
@@ -255,9 +154,11 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			Update(src);
 			dijkstraAlgo(src);
 		}
+
 		//if there no path we return -1 like Infinite
-		if(node_info.get(dest).pereants==-1)
+		if(node_info.get(dest).pereants==-1) {
 			return -1;
+		}
 		//the distance from the source to the destination save in destination dist in inner class nodeAlgo.
 		return node_info.get(dest).dist;
 	}
@@ -273,7 +174,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
 
-		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null) {
+		if(_DWGraph.getNode(src)==null||_DWGraph.getNode(dest)==null||_DWGraph.getE(src).isEmpty()) {
 			return null;
 		}
 		//Create a list that will store the cheapest list from the destination node to the source node.
@@ -358,7 +259,6 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	@Override
 	public boolean load(String file) {
 		try {
-			System.out.println("ihhh");
 			GsonBuilder build = new GsonBuilder();
 			build.registerTypeAdapter(directed_weighted_graph.class,new deserialize());
 			Gson gson = build.create();			
@@ -375,15 +275,27 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 	}
 
-
+	/**
+	 * This algorithm makes it possible to go over a weighted directed graph
+     *the node stack, which starts out empty and stores the history of nodes explored but not yet committed to a strongly connected component.
+     ** as nodes are not popped as the search returns up the tree; they are only popped when an entire strongly connected component has been found.
+     *The outermost loop searches each node that has not yet been visited, ensuring that nodes which are not reachable from the first node are still eventually traversed. 
+     *finding all successors from the node v, and reporting all strongly connected components of that subgraph.
+     *When each node finishes recursing, if its lowlink is still set to its index, then it is the root node of a strongly connected component, formed by all of the nodes above it on the stack.
+     * The algorithm pops the stack up to and including the current node, and presents all of these nodes as a strongly connected component.
+     * Note that v.lowlink := min(v.lowlink, w.index) is the correct way to update v.lowlink if w is on stack.
+      *Because w is on the stack already, (v, w) is a back-edge in the DFS tree and therefore w is not in the subtree of v. Because v.lowlink takes into account nodes reachable only through the nodes in the subtree of v we must stop at w and use w.index instead of w.lowlink.
+	 */
 
 	private void DFS(node_data n) {
+
 		Tarjan_Algo.stack.add(n);
-		Tarjan_Algo.lowlink.put(n.getKey(), Tarjan_Algo.count++);
+		Tarjan_Algo.lowlink.put(n.getKey(),Tarjan_Algo.count++);
 
 		boolean isComponentRoot = true;
 		n.setInfo("true");
-		for (edge_data  v : getGraph().getE(n.getKey())) {
+
+		for (edge_data v : getGraph().getE(n.getKey())) {
 			if (getGraph().getNode(v.getDest()).getInfo().equals("false")) {
 				DFS(getGraph().getNode(v.getDest()));
 			}
@@ -395,15 +307,16 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 		if (isComponentRoot) {
-			node_data node= Tarjan_Algo.stack.pop();
-			while (node.getKey() == n.getKey()) {
-				node=Tarjan_Algo.stack.pop();
+			while (true) {
+				node_data node=Tarjan_Algo.stack.pop();
 				Tarjan_Algo.lowlink.replace(node.getKey(),Integer.MAX_VALUE);
+				if(node.getKey() == n.getKey())
+					break;
 			}
 			Tarjan_Algo._count_connected_graphs++;
 		}
-
 	}
+
 
 
 
@@ -428,9 +341,9 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		while(!p.isEmpty()) {
 			//update the n node at the cheapest node and delete it from the Priority Queue p 
 			nodeAlgo n = p.poll();
+
 			//running on the neighbors of n node
 			for(edge_data neighbor: _DWGraph.getE(n.id)) {
-
 				if(!node_info.containsKey(neighbor.getDest())) {
 					node_info.put(neighbor.getDest(), new nodeAlgo(neighbor.getDest()));
 				}
@@ -452,9 +365,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 				n.vis=true;
 
 			}
-
 		}
-
 	}
 
 
@@ -507,13 +418,13 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		private HashMap<Integer,Integer> lowlink;
 		private int count;
 
+	
 
 		TarjanAlgo(){
 			lowlink= new HashMap<Integer,Integer>();
 			stack = new Stack<node_data>();
 			_count_connected_graphs=0;
 			count=0;
-
 
 			for (node_data i : _DWGraph.getV()) {
 				i.setInfo("false");
@@ -553,8 +464,13 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			directed_weighted_graph g =new DWGraph_DS();
 			for(JsonElement copy :nodeJsonObj) {
 				node_data n = new NodeData(copy.getAsJsonObject().get("id").getAsInt());
-				geo_location pos = new Point3D(copy.getAsJsonObject().get("pos").getAsString());
-				n.setLocation(pos);
+				if(copy.getAsJsonObject().has("pos")) {
+					geo_location pos = new Point3D(copy.getAsJsonObject().get("pos").getAsString());
+					n.setLocation(pos);
+				}
+				else {
+					n.setLocation(null);
+				}
 				g.addNode(n);
 			}
 
@@ -583,7 +499,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			JsonArray nodeJsonArray = new JsonArray();
 			for(node_data node :graph.getV()) {
 				JsonObject nodeObject = new JsonObject();
-				nodeObject.addProperty("pos", node.getLocation().toString());
+				if(node.getLocation()!=null) 
+					nodeObject.addProperty("pos", node.getLocation().toString());
 				nodeObject.addProperty("id", node.getKey());
 				nodeJsonArray.add(nodeObject);
 
