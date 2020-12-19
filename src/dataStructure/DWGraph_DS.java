@@ -8,6 +8,7 @@ import java.util.HashMap;
 import api.directed_weighted_graph;
 import api.edge_data;
 import api.node_data;
+import dataStructure.EdgeData;
 
 
 /**

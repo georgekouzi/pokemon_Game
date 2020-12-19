@@ -166,7 +166,7 @@ public class LoginPanel {
 					Error.add(_loginn, BorderLayout.AFTER_LAST_LINE);
 					JLabel title;
 					
-					Error.add(title = new JLabel("                                       Error  your id is not much:"), BorderLayout.CENTER);
+					Error.add(title = new JLabel(" Error  your id is not much: The ID must contain 9 numbers"), BorderLayout.CENTER);
 					Error.setVisible(true);
 				
 				}

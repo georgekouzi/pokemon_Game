@@ -15,12 +15,17 @@ public class Ex2 implements Runnable  {
 	private static GUI _win;
 	private static File folderInput = new File("src\\images\\winningImage.png");
 	private static long id;
-	private static MainManu main; 
-	public static void main(String args[]){
-		 main =new MainManu();
-		StartWithManu();
+	public static void main(String [] arg){
+		if (arg.length==0) {
+			StartWithManu();
+		}
+		else {
+			id=Long.parseLong(arg[0]);
+			scenaio=Integer.parseInt(arg[1]);
+		}
+		
 		Thread client = new Thread(new Ex2());
-		Thread Music = new Thread(new MyMusic("Pokemon.mp3"));
+		Thread Music = new Thread(new MyMusic("file//Pokemon.mp3"));
 		client.start();
 		Music.start();
 		if(!client.isAlive()) 
@@ -58,7 +63,7 @@ public class Ex2 implements Runnable  {
 
 		game_service game= Game_Server_Ex2.getServer(scenaio);		
 		game.login(id);
-		Pokemon_Game Pokemon =new Pokemon_Game();
+		Pokemon_Game Pokemon =new Pokemon_Game(game);
 
 		//make json file and load it from file 
 		Pokemon.reade_data(game.getGraph(),"graph_game");
@@ -93,7 +98,7 @@ public class Ex2 implements Runnable  {
 
 	
 	public void up(Arena arena,game_service game) {
-		_win = new GUI(game);
+		_win = new GUI(game,scenaio);
 		_win.update(arena);
 		
 	}
