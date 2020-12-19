@@ -20,7 +20,7 @@ These algorithms work on graphs so we are guaranteed that the trainers will alwa
 -------------------------------------------------------------------------------------
 
 
-#### How It Works:
+#### How the game Works:
 
 1) You have 24 scenario games (Between 0 and 23), each scenario different.
    The difference is:
@@ -28,12 +28,16 @@ These algorithms work on graphs so we are guaranteed that the trainers will alwa
 * The amount of Pokemon trainers varies from scenario to scenario.
 * The amount of Pokemon to catch varies from scenario to scenario.
 
-2) Once you have chosen which scenario you want to play you need to put our id. 
+2) Once you have chosen scenario game you need to put our id (the id need to be 9 number). 
 then the game will start running with a time limit - each Scenario has its own limit time .
 
-3) when the game start you can see the results that each agent has accumulated and his transitions from node to node.
+3) 
+* when the game start you can see the results that each  Pokemon trainers has accumulated and his transitions from node to node.
+* you can see the pokemons on the edges and the Pokemon trainers try to catch them.
 
-## Another explanation for how the game work : 
+![](https://github.com/georgekouzi/pokemon_Game/blob/main/src/images/%E2%80%8F%E2%80%8F16.PNG?raw20*20)
+
+## More explanation for how the game work : 
 https://github.com/georgekouzi/pokemon_Game/wiki/pokemon-game
 
 ## for more informetion about the projact : 
