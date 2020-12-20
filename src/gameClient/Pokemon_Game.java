@@ -95,7 +95,6 @@ public class Pokemon_Game {
 		PokemonUpdate(game);
 		_Arena.setAgents(AgentsList);
 		_Arena.setPokemons(_Pokemon_data);
-
 		for(int i=0;i<AgentsList.size();i++) {
 			 
 			CL_Agent Agent=AgentsList.get(i);
@@ -123,10 +122,11 @@ public class Pokemon_Game {
 
 		if(AgentPath.containsKey(Agent.getID())) {
 			int nextDest= AgentPath.get(Agent.getID()).remove(0).getKey();
-			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),nextDest).getWeight()*250/Agent.getSpeed());
+			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),nextDest).getWeight()*265/Agent.getSpeed());
 			if(AgentPath.get(Agent.getID()).isEmpty()) {
 				AgentPath.remove(Agent.getID());
 				PokemonToAgent.remove(Agent.getID());
+				
 			}
 			return nextDest;
 		}
@@ -177,7 +177,13 @@ public class Pokemon_Game {
 			}
 
 		}
+		
+		
 		if(!AgentPath.containsKey(Agent.getID())) {
+				
+			
+			timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),algo.getGraph().getE(Agent.getSrcNode()).iterator().next().getDest()).getWeight()*265/Agent.getSpeed());
+
 			return algo.getGraph().getE(Agent.getSrcNode()).iterator().next().getDest();
 		}
 
@@ -189,7 +195,9 @@ public class Pokemon_Game {
 			AgentPath.remove(Agent.getID());
 			PokemonToAgent.remove(Agent.getID());
 		}
-		timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),newdest).getWeight()*250/Agent.getSpeed());
+		
+		
+		timeToSlip=(long) (algo.getGraph().getEdge(Agent.getSrcNode(),newdest).getWeight()*265/Agent.getSpeed());
 
 		return newdest;
 
