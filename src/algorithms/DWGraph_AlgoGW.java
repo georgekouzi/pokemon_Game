@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Stack;
@@ -127,9 +128,87 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			if (n.getInfo().equals("false")) 
 				DFS(n);
 		}
+
+
 		return (Tarjan_Algo._count_connected_graphs == 1);
 
 	}
+	public List<List<Integer>> connected_component(int n){
+		
+		Tarjan_Algo= new TarjanAlgo();
+		node_data node=_DWGraph.getNode(n);
+				dfscomp(node);
+		
+		return Tarjan_Algo.components;
+		
+	}
+	
+
+
+	public List<List<Integer>> connected_components() {
+		Tarjan_Algo= new TarjanAlgo();
+		for (node_data n :_DWGraph.getV()) {
+			if ( Tarjan_Algo.dfn.get(n.getKey())==-1)
+				dfscomp(n);
+		}
+		return Tarjan_Algo.components;
+	}
+
+	public void dfscomp(node_data v) {
+		HashMap<Integer,Integer> parents= new  HashMap<Integer,Integer>();
+		
+		Tarjan_Algo.stack.push(v);
+	
+		
+		parents.put(v.getKey(), v.getKey());
+		while (!Tarjan_Algo.stack.isEmpty()) {
+			v = Tarjan_Algo.stack.peek();
+
+			if (Tarjan_Algo.dfn.get(v.getKey()) == -1) {
+				Tarjan_Algo.trace.add(v);
+				Tarjan_Algo.dfn.put(v.getKey(), Tarjan_Algo.count);
+				Tarjan_Algo.lowlink.put(v.getKey(), Tarjan_Algo.count);
+				Tarjan_Algo.count++;
+
+				
+			}
+			boolean flag = true;
+			for (edge_data w : _DWGraph.getE(v.getKey())) {
+				parents.put(w.getDest(), v.getKey());
+				if(Tarjan_Algo.dfn.get(w.getDest())==-1) {
+					flag = false;
+					
+					Tarjan_Algo.stack.push(_DWGraph.getNode(w.getDest()));
+					break;
+				} 
+				
+				else 
+					Tarjan_Algo.lowlink.replace(v.getKey(), Math.min(Tarjan_Algo.lowlink.get(w.getDest()), Tarjan_Algo.lowlink.get(v.getKey())));
+				
+			}
+			
+			if (flag) {
+				v = Tarjan_Algo.stack.pop();
+				Tarjan_Algo.lowlink.replace(parents.get(v.getKey()), Math.min(Tarjan_Algo.lowlink.get(parents.get(v.getKey())), Tarjan_Algo.lowlink.get(v.getKey())));
+				if (Tarjan_Algo.dfn.get(v.getKey()) == Tarjan_Algo.lowlink.get(v.getKey())) {
+
+					node_data cur;
+					List<Integer> set = new ArrayList<>();
+					do {
+						cur = Tarjan_Algo.trace.pop();
+						set.add(cur.getKey());
+						Tarjan_Algo.lowlink.replace(cur.getKey(),Integer.MAX_VALUE);
+
+					} while (cur.getKey() != v.getKey());
+					Tarjan_Algo.components.add(set);
+
+				}
+			}
+		}
+	}
+
+
+
 
 
 
@@ -277,14 +356,14 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 	/**
 	 * This algorithm makes it possible to go over a weighted directed graph
-     *the node stack, which starts out empty and stores the history of nodes explored but not yet committed to a strongly connected component.
-     ** as nodes are not popped as the search returns up the tree; they are only popped when an entire strongly connected component has been found.
-     *The outermost loop searches each node that has not yet been visited, ensuring that nodes which are not reachable from the first node are still eventually traversed. 
-     *finding all successors from the node v, and reporting all strongly connected components of that subgraph.
-     *When each node finishes recursing, if its lowlink is still set to its index, then it is the root node of a strongly connected component, formed by all of the nodes above it on the stack.
-     * The algorithm pops the stack up to and including the current node, and presents all of these nodes as a strongly connected component.
-     * Note that v.lowlink := min(v.lowlink, w.index) is the correct way to update v.lowlink if w is on stack.
-      *Because w is on the stack already, (v, w) is a back-edge in the DFS tree and therefore w is not in the subtree of v. Because v.lowlink takes into account nodes reachable only through the nodes in the subtree of v we must stop at w and use w.index instead of w.lowlink.
+	 *the node stack, which starts out empty and stores the history of nodes explored but not yet committed to a strongly connected component.
+	 ** as nodes are not popped as the search returns up the tree; they are only popped when an entire strongly connected component has been found.
+	 *The outermost loop searches each node that has not yet been visited, ensuring that nodes which are not reachable from the first node are still eventually traversed. 
+	 *finding all successors from the node v, and reporting all strongly connected components of that subgraph.
+	 *When each node finishes recursing, if its lowlink is still set to its index, then it is the root node of a strongly connected component, formed by all of the nodes above it on the stack.
+	 * The algorithm pops the stack up to and including the current node, and presents all of these nodes as a strongly connected component.
+	 * Note that v.lowlink := min(v.lowlink, w.index) is the correct way to update v.lowlink if w is on stack.
+	 *Because w is on the stack already, (v, w) is a back-edge in the DFS tree and therefore w is not in the subtree of v. Because v.lowlink takes into account nodes reachable only through the nodes in the subtree of v we must stop at w and use w.index instead of w.lowlink.
 	 */
 
 	private void DFS(node_data n) {
@@ -307,12 +386,16 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 
 
 		if (isComponentRoot) {
+			List<Integer> set = new ArrayList<>();
+
 			while (true) {
 				node_data node=Tarjan_Algo.stack.pop();
+				set.add(node.getKey());
 				Tarjan_Algo.lowlink.replace(node.getKey(),Integer.MAX_VALUE);
 				if(node.getKey() == n.getKey())
 					break;
 			}
+			Tarjan_Algo.components.add(set);
 			Tarjan_Algo._count_connected_graphs++;
 		}
 	}
@@ -358,6 +441,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 						node_info.get(neighbor.getDest()).pereants=n.id;
 
 					}
+
 
 				}
 
@@ -414,13 +498,22 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 	private class TarjanAlgo{
 		private int _count_connected_graphs;
 		private Stack<node_data> stack;
+		private Stack<node_data> trace;
+
 		private HashMap<Integer,Integer> lowlink;
 		private int count;
+//		private HashMap<Integer,Integer> parents;
+		private HashMap<Integer,Integer> dfn;
+		private List<List<Integer>> components;
 
-	
+
 
 		TarjanAlgo(){
 			lowlink= new HashMap<Integer,Integer>();
+			dfn= new HashMap<Integer,Integer>();
+			trace = new Stack<node_data>();
+			components =new ArrayList<>();
+//			parents =new HashMap<>();
 			stack = new Stack<node_data>();
 			_count_connected_graphs=0;
 			count=0;
@@ -428,6 +521,8 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 			for (node_data i : _DWGraph.getV()) {
 				i.setInfo("false");
 				lowlink.put(i.getKey(), 0);
+//				parents.put(i.getKey(), null);
+				dfn.put(i.getKey(), -1);
 
 			}
 
@@ -520,6 +615,7 @@ public class DWGraph_AlgoGW implements dw_graph_algorithms  {
 		}
 
 	}
+	
 
 
 
